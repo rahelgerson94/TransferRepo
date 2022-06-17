@@ -60,6 +60,7 @@ int main(int argc, const char * argv[]) {
      ALPHA BETA GAMMA
      BANANA
      
+     
     */
     char* EOF_true;
     int  num_spaces;
@@ -164,8 +165,8 @@ int repeat_string(char key[], char repeated_key[], char input_string[], int key_
 void reset_array(char some_array[128], int array_len){
     int i;
     for (i = 0; i < array_len; ++i)
-        some_array[i] = '\0';
-    //some_array[i] = '\0';
+        some_array[i] = ' ';
+    some_array[i] = '\0';
 }
 
 
