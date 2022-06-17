@@ -1,0 +1,3 @@
+cat	dog
+bla	apple
+cobra	banana
