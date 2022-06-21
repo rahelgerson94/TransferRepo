@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		64FD63F8285CF44500A04413 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 64FD63F7285CF44500A04413 /* main.c */; };
+		645EE20F285918E4000FE9F1 /* beaufort.c in Sources */ = {isa = PBXBuildFile; fileRef = 645EE20E285918E4000FE9F1 /* beaufort.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		64FD63F2285CF44500A04413 /* CopyFiles */ = {
+		645EE209285918E4000FE9F1 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -23,12 +23,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		64FD63F4285CF44500A04413 /* beaufort */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = beaufort; sourceTree = BUILT_PRODUCTS_DIR; };
-		64FD63F7285CF44500A04413 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		645EE20B285918E4000FE9F1 /* beaufort */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = beaufort; sourceTree = BUILT_PRODUCTS_DIR; };
+		645EE20E285918E4000FE9F1 /* beaufort.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = beaufort.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		64FD63F1285CF44500A04413 /* Frameworks */ = {
+		645EE208285918E4000FE9F1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -38,26 +38,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		64FD63EB285CF44500A04413 = {
+		645EE202285918E4000FE9F1 = {
 			isa = PBXGroup;
 			children = (
-				64FD63F6285CF44500A04413 /* beaufort */,
-				64FD63F5285CF44500A04413 /* Products */,
+				645EE20D285918E4000FE9F1 /* beaufort */,
+				645EE20C285918E4000FE9F1 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		64FD63F5285CF44500A04413 /* Products */ = {
+		645EE20C285918E4000FE9F1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				64FD63F4285CF44500A04413 /* beaufort */,
+				645EE20B285918E4000FE9F1 /* beaufort */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		64FD63F6285CF44500A04413 /* beaufort */ = {
+		645EE20D285918E4000FE9F1 /* beaufort */ = {
 			isa = PBXGroup;
 			children = (
-				64FD63F7285CF44500A04413 /* main.c */,
+				645EE20E285918E4000FE9F1 /* beaufort.c */,
 			);
 			path = beaufort;
 			sourceTree = "<group>";
@@ -65,13 +65,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		64FD63F3285CF44500A04413 /* beaufort */ = {
+		645EE20A285918E4000FE9F1 /* beaufort */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 64FD63FB285CF44500A04413 /* Build configuration list for PBXNativeTarget "beaufort" */;
+			buildConfigurationList = 645EE212285918E4000FE9F1 /* Build configuration list for PBXNativeTarget "beaufort" */;
 			buildPhases = (
-				64FD63F0285CF44500A04413 /* Sources */,
-				64FD63F1285CF44500A04413 /* Frameworks */,
-				64FD63F2285CF44500A04413 /* CopyFiles */,
+				645EE207285918E4000FE9F1 /* Sources */,
+				645EE208285918E4000FE9F1 /* Frameworks */,
+				645EE209285918E4000FE9F1 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -79,24 +79,24 @@
 			);
 			name = beaufort;
 			productName = beaufort;
-			productReference = 64FD63F4285CF44500A04413 /* beaufort */;
+			productReference = 645EE20B285918E4000FE9F1 /* beaufort */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		64FD63EC285CF44500A04413 /* Project object */ = {
+		645EE203285918E4000FE9F1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
-					64FD63F3285CF44500A04413 = {
+					645EE20A285918E4000FE9F1 = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
 				};
 			};
-			buildConfigurationList = 64FD63EF285CF44500A04413 /* Build configuration list for PBXProject "beaufort" */;
+			buildConfigurationList = 645EE206285918E4000FE9F1 /* Build configuration list for PBXProject "beaufort" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -104,29 +104,29 @@
 				en,
 				Base,
 			);
-			mainGroup = 64FD63EB285CF44500A04413;
-			productRefGroup = 64FD63F5285CF44500A04413 /* Products */;
+			mainGroup = 645EE202285918E4000FE9F1;
+			productRefGroup = 645EE20C285918E4000FE9F1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				64FD63F3285CF44500A04413 /* beaufort */,
+				645EE20A285918E4000FE9F1 /* beaufort */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		64FD63F0285CF44500A04413 /* Sources */ = {
+		645EE207285918E4000FE9F1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				64FD63F8285CF44500A04413 /* main.c in Sources */,
+				645EE20F285918E4000FE9F1 /* beaufort.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		64FD63F9285CF44500A04413 /* Debug */ = {
+		645EE210285918E4000FE9F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -184,7 +184,7 @@
 			};
 			name = Debug;
 		};
-		64FD63FA285CF44500A04413 /* Release */ = {
+		645EE211285918E4000FE9F1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -235,7 +235,7 @@
 			};
 			name = Release;
 		};
-		64FD63FC285CF44500A04413 /* Debug */ = {
+		645EE213285918E4000FE9F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -245,7 +245,7 @@
 			};
 			name = Debug;
 		};
-		64FD63FD285CF44500A04413 /* Release */ = {
+		645EE214285918E4000FE9F1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -258,25 +258,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		64FD63EF285CF44500A04413 /* Build configuration list for PBXProject "beaufort" */ = {
+		645EE206285918E4000FE9F1 /* Build configuration list for PBXProject "beaufort" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				64FD63F9285CF44500A04413 /* Debug */,
-				64FD63FA285CF44500A04413 /* Release */,
+				645EE210285918E4000FE9F1 /* Debug */,
+				645EE211285918E4000FE9F1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		64FD63FB285CF44500A04413 /* Build configuration list for PBXNativeTarget "beaufort" */ = {
+		645EE212285918E4000FE9F1 /* Build configuration list for PBXNativeTarget "beaufort" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				64FD63FC285CF44500A04413 /* Debug */,
-				64FD63FD285CF44500A04413 /* Release */,
+				645EE213285918E4000FE9F1 /* Debug */,
+				645EE214285918E4000FE9F1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 64FD63EC285CF44500A04413 /* Project object */;
+	rootObject = 645EE203285918E4000FE9F1 /* Project object */;
 }

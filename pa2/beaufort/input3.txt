@@ -1,0 +1,11 @@
+FORTIFICATION
+R R R R      
+B     B     B      BB B
+WALL WERROR V    V      V  
+BAD BAD BAD 
+   N N N NN     N
+BB BB     B B 
+R R R R R R R R R R R R R R R R R R R R R R R R        
+BB         RR        R R        BB         RR           R R        BB         RR 
+B 
+AAA AA

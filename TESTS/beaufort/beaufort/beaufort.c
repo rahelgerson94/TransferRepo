@@ -43,7 +43,7 @@ int main(int argc, const char * argv[]) {
     
     
     /*
-     
+     TEST INPUTS
      FORTIFICATION
      DEFENDTHEEASTWALLOFTHECASTLE
      WALLS MUST BE DEFENDED
@@ -53,13 +53,14 @@ int main(int argc, const char * argv[]) {
      WALL WERROR
      CAT PANDA DOG
      WRAPS
-     LOST IN TRANS LATINO
+     SO MUCH JU
+     BLA
+     LOST IN TRANS LAT
      
      QUACK
      A
      ALPHA BETA GAMMA
      BANANA
-     
      
     */
     char* EOF_true;
@@ -67,10 +68,7 @@ int main(int argc, const char * argv[]) {
     num_spaces = 0;
     //strcpy(key, "EITAN\n");
     fgets(key, 128, stdin);
-    //int key_len = count_valuable_chars(key);
-    //kill_new_line(key);
-    int key_len = count_valuable_chars(key);
-    
+   
     EOF_true = fgets(input_str, 128, stdin) ;
     int input_str_len = count_valuable_chars(input_str);
     reset_array(repeated_key, input_str_len);
@@ -78,45 +76,21 @@ int main(int argc, const char * argv[]) {
     while(EOF_true != NULL && strcmp(input_str, "\n") != 0){
         key_offset = repeat_string(key, repeated_key, input_str, key_offset);
         beaufort_cipher(repeated_key, input_str, encryped_str);
+        /*
+         printf("key_offset = %d\n", key_offset);
+         printf("repeated_key = %s\n", repeated_key);
+         printf("input_str    = %s\n", input_str);
+         printf("encrypted_str  = %s\n", encryped_str);
+         */
         
-        printf("key_offset = %d\n", key_offset);
-        printf("repeated_key = %s\n", repeated_key);
-        printf("input_str    = %s\n", input_str);
-        printf("encrypted_str  = %s\n", encryped_str);
-        //printf("%s\n", encryped_str);
+        printf("%s\n", encryped_str);
         reset_array(repeated_key, input_str_len);
         reset_array(encryped_str, input_str_len);
         //key_offset = 0;
         EOF_true = fgets(input_str, 128, stdin) ;
-        //memset( repeated_key, ' ', sizeof(char)*strlen(input_str) );
-        //memset( encryped_str, ' ', sizeof(char)*strlen(input_str) );
     }
-    /*
-     do {
-         //printf("enter an input str: ");
-         
-         EOF_true = fgets(input_str, 128, stdin) ;
-         if (EOF_true == NULL || strcmp(input_str, "\n") == 0){
-             return 0;
-         }
-         int input_str_len = count_valuable_chars(input_str);
-         key_offset = repeat_string(key, repeated_key, input_str_len, key_offset);
-         num_spaces = beaufort_cipher(repeated_key, input_str, encryped_str);
-         key_offset -=num_spaces;
-         
- //        printf("key_offset = %d\n", key_offset);
- //        printf("repeated_key = %s\n", repeated_key);
- //        printf("input_str    = %s\n", input_str);
- //        printf("encrypted_str  = %s\n", encryped_str);
-         printf("%s\n", encryped_str);
-
-         reset_array(repeated_key);
-         reset_array(encryped_str);
-         
-     } while( EOF_true != NULL || strcmp(input_str, "\n") != 0); //blank line would be read as '\n'
-
-
-     */
+     
+   
     
     return 0;
 }
@@ -141,7 +115,7 @@ char find_beau_char(char char2encrypt, char key_char){
 int repeat_string(char key[], char repeated_key[], char input_string[], int key_idx){
     int key_len = count_valuable_chars(key);
     //for (int i = 0; i < input_str_len - 1; i ++){
-    char db_input_char, db_key_char;
+    //char db_input_char, db_key_char;
     int input_str_len = count_valuable_chars(input_string);
     for (int i = 0; i < input_str_len; i++){ // No new lines
         //if (key[key_idx] == '\n')
@@ -157,44 +131,41 @@ int repeat_string(char key[], char repeated_key[], char input_string[], int key_
             repeated_key[i] = key[key_idx];
             key_idx++;
         }
-        printf("%c   %c\n", repeated_key[i], input_str[i]);
+        //printf("%c   %c\n", repeated_key[i], input_str[i]);
     }
-    return key_idx;
+    return key_idx % key_len;
 }
 
 void reset_array(char some_array[128], int array_len){
     int i;
     for (i = 0; i < array_len; ++i)
-        some_array[i] = ' ';
-    some_array[i] = '\0';
+        some_array[i] = '\0';
+    //some_array[i] = '\0';
 }
 
 
 int beaufort_cipher(char key[], char input_str[], char output_str[]){
-    printf("%s\n", input_str);
+    //printf("%s\n", input_str);
     int num_spaces = 0; //add up number of spaces, subtract this number from  key_offset
     char c;
     int input_str_len = count_valuable_chars(input_str);
     int key_idx = 0;
   
-  //for (int output_idx = 0; output_idx < strlen(input_str) -1; output_idx++ ){
     for (int output_idx = 0; output_idx < input_str_len; output_idx++ ){
-        //if (output_idx==strlen(input_str)-1){printf("stop\n");}
-        char db_input_char = input_str[output_idx];
-        char db_key_char = key[key_idx];
-        int res = strncmp(&input_str[output_idx], " ", 1);
-        if ( res == 0){
+        //char db_input_char = input_str[output_idx];
+        //char db_key_char = key[key_idx];
+        if ( input_str[output_idx] == ' '){
             c = ' ';
-            strcpy(&output_str[output_idx], &c );
+            strncat(&output_str[output_idx], &c, 1 );
             
         }
             else {
                c = find_beau_char(input_str[output_idx], key[key_idx]);
-               strcpy(&output_str[output_idx], &c );
+                strncat(&output_str[output_idx], &c, 1 );
                 
            }
         key_idx++;
-        printf("%c   %c\n", db_input_char, db_key_char);
+        //printf("%c   %c\n", db_input_char, db_key_char);
     }
     
     return num_spaces;

@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
-   uuid = "6061EAF3-FC85-49E9-BF9D-B8AB94551C65"
+   uuid = "82B51DB7-BEE6-448F-8ABC-B81498015AEE"
    type = "1"
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "30B14B07-6C95-4582-908C-984818D83964"
+            uuid = "54E37328-17F0-45C1-AD50-081D8706514A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "beaufort/main.c"
+            filePath = "beaufort/beaufort.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
-            landmarkName = "repeat_string(key, repeated_key, input_string, key_idx)"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "main(argc, argv)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "70FB6B2D-79B2-4492-8CA4-ECBB016B2BE2"
+            uuid = "57B2DD27-60D9-43C8-803C-9C101F137961"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "beaufort/main.c"
+            filePath = "beaufort/beaufort.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "main(argc, argv)"
             landmarkType = "9">
          </BreakpointContent>
