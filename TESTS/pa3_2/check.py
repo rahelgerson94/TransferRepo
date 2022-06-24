@@ -37,7 +37,6 @@ def scut(strings, cols, mode):
             eol = new_ls[i] -1
             start = new_ls[i-1] + 1
         
-        
         curr = strings[start:eol]
         scut_line(curr, cols, mode)
         
@@ -70,9 +69,10 @@ def expand(string):
     
     
 if __name__ == '__main__':
-    s = 'alice,30,532,AZ,S\nbob,    25,3411,CA,Z\nj      onas,40,8192,AZ,T\ngreg,50,400,UT,C'
+    s = '\n\nalice,30,532,AZ,S\nbob,25,3411,CA,Z\njonas,40,8192,AZ,T\ngreg,50,400,UT,C'
     mode = 'l'
     d = delim_locs(mode, s)
+    n = delim_locs('n', s)
     cols = [1,2,7,8,9,10,11,12,13,14,15]
     
     #scut_line(s, cols, mode)
