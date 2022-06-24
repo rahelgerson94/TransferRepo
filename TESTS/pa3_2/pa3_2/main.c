@@ -24,14 +24,16 @@ void print_int_arr(int* arr);
 void get_separation_locs(char input[], char delim, int start_loc, int end_loc, int output[]);
 void scut_letters(char input[], int cols2keep[], char output[] );
 
+int find_double_digit(char* input); //return the index of the first digit of the 2 digit number
+void parse_cmd_args_double(char* input, int* output, int start_idx);
+void parse_cmd_args_single(char* input, int* output, int end_idx);
 //void get_separation_locs(char input[],char delim,int startLoc, int endLoc,int output[], char delim_type);
 void de_escape(char* arr);
 char decide(char in);
+int count(char* str, char ch);
 char output[102];
 
 int main(int argc, const char * argv[]) {
-    
-    
     char* delim_type = argv[1];
     //char delim = delim_type[1];
     //TODO: make case statements for different delim types
@@ -63,9 +65,7 @@ int main(int argc, const char * argv[]) {
 //        printf("%d. %c\n", i, input[i]);
 //    }
     de_escape(input);
-//    for (int i = 0; i < 100; i++){
-//        printf("%d. %c\n", i, input[i]);
-//    }
+
     get_separation_locs(input, '\n', 0, -1, new_line_locs);
     
     int num_lines = len_int(new_line_locs);// + 1;
@@ -104,7 +104,7 @@ void scut_line(char* output, char* input, int* col_list, int* delim_locs){
         while(col_list[cc] > 0){
             if(col_list[cc] == col){
                 //printf("The Correct Word >> %s\n",word);
-                printf("%s ",word);
+                printf("%s",word);
                 break;
             }
             cc++;
@@ -180,13 +180,15 @@ void get_separation_locs(char input[], char delim,int startLoc, int endLoc,int o
 }
 void scut_letters(char input[], int cols2keep[], char output[] ){
     int output_idx = 0;
-    for (int i = 0; i < sizeof(cols2keep)/sizeof(int); i++){
-        int col = cols2keep[i];
+    int num_cols = len_int(cols2keep);
+    //printf("%d", num_cols);
+    for (int i = 0; i < num_cols; i++){
+        int col = cols2keep[i]-1; //make zero idx
         output[output_idx] = input[col];
         output[output_idx+1] = ' ';
         output_idx = output_idx+2;
     }
-    printf("%s \n", output);
+    printf("%s\n", output);
 }
 
 char decide(char in){
@@ -234,16 +236,87 @@ int len_char(char* arr){
 
 void parse_cmd_args(char* input, int* output){
     int out_idx=0;
-    for (int i = 0; input[i] != '\0'; i++){
-        if (input[i] == ',') continue;
-        else if (input[i] == ' ') continue;
-        else{
-            output[out_idx] = atoi(&input[i]);// -1; //make 0 indexed
+    int dd_begin = find_double_digit( input);
+    int num_iters = count(input, ',') + 1;
+    
+    //single digits only
+    if (dd_begin < 0){
+        for (int i = 0; out_idx <= num_iters ; i=i+2){
+            output[out_idx] = atoi(&input[i]) ; //make 0 indexed
             out_idx++;
-            printf("%d ,", output[out_idx]);
+        }
+        output[out_idx] = -1;
+        return;
+    } //endif
+    
+    //list contains only double digits
+    else if (dd_begin == 200){
+        char val[2];
+        int out_idx = 0;
+        for (int i = 0; out_idx <= num_iters; i= i + 3){
+                val[0] = input[i];
+                val[1] = input[i+1];
+                output[out_idx] = atoi(val);
+                //printf("%d ", output[out_idx]);
+                out_idx++;
+                memset(val, '0', 2);
+        }
+        output[out_idx] = -1;
+    }
+    
+    //list contains double digits and single digits
+    else {
+        char val[2];
+        for (int i = 0; i < dd_begin-1; i = i + 2){
+            output[out_idx] = atoi(&input[i]); //make 0 indexed
+            out_idx++;
+        }
+        for (int i = dd_begin; out_idx < num_iters +1 ; i= i + 3){
+                val[0] = input[i];
+                val[1] = input[i+1];
+                output[out_idx] = atoi(val);
+                //printf("%d ", output[out_idx]);
+                out_idx++;
+            
+                memset(val, '0', 2);
+        }
+        output[out_idx] = -1;
+    }
+}
+
+
+
+
+void parse_cmd_args_double(char* input, int* output, int start_idx){
+    char val[2];
+    int out_idx=0;
+    for (int i = start_idx; input[i] != '\0'; i++){
+        if (input[i] == ',' ) continue;
+            
+        else{
+            val[0] = input[i];
+            val[1] = input[i+1];
+            output[out_idx] = atoi(val);
+            out_idx++;
         }
     }
     output[out_idx] = -1;
+}
+
+int find_double_digit(char* input){ //return the index of the first digit of the 2 digit number
+  
+    if (input[0] != ',' && input[1] != ',' )
+        return 200; //200 means only double digits
+    
+    else{
+        for (int i = 0; input[i] != '\0'; i++){
+            //2 digit
+            if (input[i] == ',' && input[i+1] != ',' && input[i+2] != ',' )
+                return  i+1;
+        }
+    }
+    
+    return -1; //
 }
 
 
@@ -290,3 +363,12 @@ void de_escape(char* arr){
 }
 
 
+int count(char* str, char ch){
+    int i = 0;
+    int count = 0;
+    while (str[i] != '\0'){
+        if (str[i] == ch) count++;
+        i++;
+    }
+    return count;
+}
