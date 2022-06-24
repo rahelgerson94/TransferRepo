@@ -31,36 +31,51 @@ void parse_cmd_args_single(char* input, int* output, int end_idx);
 void de_escape(char* arr);
 char decide(char in);
 int count(char* str, char ch);
-char output[102];
+void parse_cmd_args2(char input[],int output[]);
 
+int check_argc(int argc);
+int check_sel(char sel[]);
+int check_type(char delim_type);
+
+char output[102];
+int flag = 0;
+char delim;
 int main(int argc, const char * argv[]) {
-    char* delim_type = argv[1];
-    //char delim = delim_type[1];
-    //TODO: make case statements for different delim types
-    
-    char delim = decide(delim_type[1]);
-    char* col_list = (char*) argv[2];
-    
     //declarations
     int cols2keep[100] = {0};
     int delim_locs[100] = {0};
     int new_line_locs[100] = {0};
     char curr_line[102]; //null charachter and newline
-    //char input[102]; //null charachter and newline
     
+    /*checks*/
+    char delim_type = argv[1][1];
+    flag = check_argc(argc);
+    if (flag == -1 ) return -1;
+    
+    flag = check_type(delim_type);
+    if (flag == -1 ) return -1;
+    else { delim = decide(delim_type);}
+    
+    char* col_list = (char*) argv[2];
+    flag = check_sel(col_list);
+    if (flag == -1 ) return -1;
+    else {
+        parse_cmd_args2(col_list, cols2keep); //take the string list and turn it into an int list
+        print_int_arr(cols2keep);
+    };
+   
     //assignments
     int in_start;
     int in_end = 0;
     
     //begin
     //parse command args
-    parse_cmd_args(col_list, cols2keep); //take the string list and turn it into an int list
-    print_int_arr(cols2keep);
+    
     memset(curr_line,'\0',100);
     //get input text
     //fgets(input, 100, stdin);
     //char* input = "the big lazy fox will\ngo to sit in the cave\nover by the small mountain";
-    char* input = "alice,30,532,AZ,S\nbob,25,3411,CA,Z\njonas,40,8192,AZ,T\ngreg,50,400,UT,C";
+    char input[100] = "alice,30,532,AZ,S\nbob,25,3411,CA,Z\njonas,40,8192,AZ,T\ngreg,50,400,UT,C";
 //    for (int i = 0; i < 100; i++){
 //        printf("%d. %c\n", i, input[i]);
 //    }
@@ -104,7 +119,7 @@ void scut_line(char* output, char* input, int* col_list, int* delim_locs){
         while(col_list[cc] > 0){
             if(col_list[cc] == col){
                 //printf("The Correct Word >> %s\n",word);
-                printf("%s",word);
+                printf("%s ",word);
                 break;
             }
             cc++;
@@ -164,6 +179,7 @@ void reset_arr(char* arr, int start, int end ){
 //        }
 //    }
 //}
+
 void get_separation_locs(char input[], char delim,int startLoc, int endLoc,int output[]){
     if(endLoc == -1){
         endLoc = 100;
@@ -232,6 +248,13 @@ int len_char(char* arr){
         i++;
     }
     return len;
+}
+void parse_cmd_args2(char input[],int output[]){
+    int Start = 0;
+    int End = 0;
+    while(input[End] != '\0'){
+        
+    }
 }
 
 void parse_cmd_args(char* input, int* output){
@@ -362,7 +385,6 @@ void de_escape(char* arr){
     }
 }
 
-
 int count(char* str, char ch){
     int i = 0;
     int count = 0;
@@ -372,3 +394,47 @@ int count(char* str, char ch){
     }
     return count;
 }
+
+
+int check_argc(int argc){
+    if (argc-1 != 2){
+        //TODO : make this print to standard error
+        printf("expected 2 command line arguments.\n" );
+        return -1;
+    }
+    else return 0;
+}
+
+int check_type(char delim_type){
+    //TODO : make this print to standard error
+    if (delim_type == 'c' || delim_type == 'l' || delim_type == 'w' ) return 0;
+        
+    
+    else{
+        printf("Invalid delimiter type.\n");
+        return -1;
+    }
+}
+
+int check_sel(char sel[]){
+    if (atoi(&sel[0]) == 0){
+        printf("Invalid selection.\n");
+        return -1;
+    }
+    int i;
+    //check only dashes and commas and digits
+    for (i = 0; sel[i] != '\0'; i++){
+        if (!(sel[i] == ',' || sel[i] == '-' || atoi(&sel[i]) != 0)){
+            printf("Invalid selection.\n");
+            return -1;
+        }
+    }
+    //check last char is a digit
+    if (atoi(&sel[i-1]) == 0) {
+        printf("Invalid selection.\n");
+        return -1;
+    }
+    else return 0;
+}
+
+
