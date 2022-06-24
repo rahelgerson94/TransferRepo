@@ -45,7 +45,12 @@ int main(int argc, const char * argv[]) {
     int delim_locs[100] = {0};
     int new_line_locs[100] = {0};
     char curr_line[102]; //null charachter and newline
-    //char input[102];
+    char input[102];
+    
+    
+    
+    
+    //printf("input: %s\n", input);
     
     /*checks*/
     char delim_type = argv[1][1];
@@ -64,45 +69,44 @@ int main(int argc, const char * argv[]) {
         //print_int_arr(cols2keep);
     };
    
-    /*
-     "the big lazy fox will\ngo to sit in the cave\nover by the small mountain";
-     char input[100] = "alice,30,532,AZ,S\nbob,25,3411,CA,Z\njonas,40,8192,AZ,T\ngreg,50,400,UT,C";
-     */
-    
     //assignments
     int in_start;
     int in_end = 0;
-    //get input text
-    //fgets(input, 100, stdin);
-    char input[100] = "alice,30,532,AZ,S";
     
-        de_escape(input);
-        //printf("input: %s\n", input);
-        //begin
+    //begin
+    fgets(input, 100, stdin);
+    de_escape(input);
+    memset(curr_line,'\0',100);
     
+    //char* input = "the big lazy fox will\ngo to sit in the cave\nover by the small mountain";
+    //char input[100] = "alice,30,532,AZ,S\nbob,25,3411,CA,Z\njonas,40,8192,AZ,T\ngreg,50,400,UT,C";
+//    for (int i = 0; i < 100; i++){
+//        printf("%d. %c\n", i, input[i]);
+//    }
+    
+
+    get_separation_locs(input, '\n', 0, -1, new_line_locs);
+    
+    int num_lines = len_int(new_line_locs);// + 1;
+    
+    for (int line = 0; line < num_lines; line++){
         memset(curr_line,'\0',100);
+        in_start = in_end;
+        in_end = new_line_locs[line];
+        strcpy_(curr_line, input, 0, in_start, in_end);
+        if (delim == 'l'){ scut_letters(curr_line, cols2keep, output);}
         
-        get_separation_locs(input, '\n', 0, -1, new_line_locs);
-        
-        int num_lines = len_int(new_line_locs);// + 1;
-        
-        for (int line = 0; line < num_lines; line++){
-            memset(curr_line,'\0',100);
-            in_start = in_end;
-            in_end = new_line_locs[line];
-            strcpy_(curr_line, input, 0, in_start, in_end);
-            if (delim == 'l'){ scut_letters(curr_line, cols2keep, output);}
-            
-            else{
-                get_separation_locs(curr_line, delim, 0, -1, delim_locs);
-                scut_line(output, curr_line, cols2keep, delim_locs);
-            }
-            
-            in_start = new_line_locs[line] + 1;
-            //reset_arr(delim_locs, 0, 100);
-            memset(delim_locs, -1, 100*sizeof(int));
-            in_end++;
+        else{
+            get_separation_locs(curr_line, delim, 0, -1, delim_locs);
+            scut_line(output, curr_line, cols2keep, delim_locs);
         }
+        
+        in_start = new_line_locs[line] + 1;
+        //reset_arr(delim_locs, 0, 100);
+        memset(delim_locs, -1, 100*sizeof(int));
+        in_end++;
+    }
+  
     return 0;
 }
 
