@@ -21,6 +21,7 @@ void find_locs(char *input, int *delim_locs, char delim);
 void print_int_arr(int *arr);
 // void get_separation_locs(char input[], char delim,int startLoc, int endLoc,int Output[]);
 void get_separation_locs(char input[], char delim, int start_loc, int end_loc, int output[]);
+void get_separation_locs_ws(char input[], int startLoc, int endLoc, int output[]);
 void scut_letters(char input[], int cols2keep[], char output[]);
 
 int find_double_digit(char *input); // return the index of the first digit of the 2 digit number
@@ -37,116 +38,89 @@ int check_type(char delim_type);
 // int combineElements(int arr[],int cc);
 int combineElements(char arr[], int cc);
 int expandList(char input[], int output[]);
+void transform_input(char output[], char input[], char delim_type);
+int checkCharLoc(char input[],char b);
+void transform_input_ws(char out[], char in[]);
+void intcpy_(int dst[], int src[], int out_start, int in_start, int in_end);
 
 char output[102];
+char curr_trans[102];
 int flag = 0;
-char delim;
+char delim_type;
+//char input[102];
+char curr_line[102]; // null charachter and newline
 
 int main(int argc, const char *argv[])
 {
     // declarations
-    int cols2keep[100] = {-1}; reset_int_arr(cols2keep, 0,100, -1);
-    int delim_locs[100] = {-1}; reset_int_arr(delim_locs, 0,100, -1);
+    int cols2keep[100]; reset_int_arr(cols2keep, 0,100, -1);
+    int delim_locs[100]; reset_int_arr(delim_locs, 0,100, -1);
     int new_line_locs[100] = {-1}; reset_int_arr(new_line_locs, 0,100, -1);
-    char curr_line[102]; // null charachter and newline
-    //char input[102];
-    char input[100] = "\n\n**!!jonas,40,8192,AZ,T\ngreg,50,400,UT,C";
-
-    
+   
     // Check for valid arg count
     if (argc != 3)
     {
-        fprintf(stderr, "Exactly 2 arguments required.\n");
+        fprintf(stderr, "expected 2 command line arguments.\n");
         return -1;
     }
 
     // Check flag to see which mode we're in and abort if invalid
     if (strcmp(argv[1], "-l") == 0)
     {
-        delim = 'l';
+        delim_type = 'l';
     }
     else if (strcmp(argv[1], "-c") == 0)
     {
-        delim = ',';
+        delim_type = 'c';
     }
     else if (strcmp(argv[1], "-w") == 0)
     {
-        delim = ' ';
+        delim_type = 'w';
     }
     else
     {
         fprintf(stderr, "Invalid delimiter type.\n");
         return -1;
     }
-
-    // get input text
-    //fgets(input, 100, stdin);
-
-    de_escape(input);
-    //printf("input: %s\n", input);
-
+    //check the col list is valid
     char *col_list = (char *)argv[2];
     flag = check_sel(col_list);
     if (flag == -1)
         return -1;
     else
     {
-        parse_cmd_args2(col_list, cols2keep); // take the string list and turn it into an int list
-        // print_int_arr(cols2keep);
+        parse_cmd_args2(col_list, cols2keep);
     };
 
-    // assignments
-    int in_start;
-    int in_end = 0;
-
-    // begin
-    // parse command args
-
-    //memset(curr_line, '\0', 100);
-    reset_char_arr(curr_line, '\0', 100);
-    // char* input = "the big lazy fox will\ngo to sit in the cave\nover by the small mountain";
-    // char input[100] = "alice,30,532,AZ,S\nbob,25,3411,CA,Z\njonas,40,8192,AZ,T\ngreg,50,400,UT,C";
-    //    for (int i = 0; i < 100; i++){
-    //        printf("%d. %c\n", i, input[i]);
-    //    }
-
-    get_separation_locs(input, '\n', 0, -1, new_line_locs);
-
-    int num_lines = len_int(new_line_locs); // + 1;
     
-
-    for (int line = 0; line < num_lines; line++)
-    {
-        //memset(curr_line, '\0', 100);
-        reset_char_arr(curr_line, 0, 100);
-        in_start = in_end;
-        in_end = new_line_locs[line];
-        strcpy_(curr_line, input, 0, in_start, in_end);
-        if (delim == 'l')
+    while(fgets(curr_line, 100, stdin) != NULL ){
+        
+        reset_char_arr(output, 0, 100);
+        reset_int_arr(delim_locs, 0, 100, -1);
+        reset_char_arr(curr_trans, 0, 100);
+        
+        if (delim_type == 'l')
         {
             scut_letters(curr_line, cols2keep, output);
         }
-
+        else if (delim_type == 'w'){
+            transform_input_ws(curr_trans, curr_line);
+            get_separation_locs_ws(curr_trans, 0, -1, delim_locs);
+            scut_line(output, curr_trans, cols2keep, delim_locs);
+        }
         else
         {
-            get_separation_locs(curr_line, delim, 0, -1, delim_locs);
-            scut_line(output, curr_line, cols2keep, delim_locs);
+            transform_input(curr_trans, curr_line, 'c');
+            get_separation_locs(curr_trans, 'c', 0, -1, delim_locs);
+            scut_line(output, curr_trans, cols2keep, delim_locs);
         }
-
-        in_start = new_line_locs[line] + 1;
-        // reset_arr(delim_locs, 0, 100);
-        //memset(delim_locs, -1, 100 * sizeof(int));
-        reset_int_arr(delim_locs, 0, 100, -1);
-        in_end++;
+        
+        
     }
-
     return 0;
 }
 
-void scut_line(char *output, char *input, int *col_list, int *delim_locs)
-{
-    //memset(output, '\0', 100);
-    reset_char_arr(output, 0, 100);
+void scut_line(char *output, char *input, int *col_list, int *delim_locs){
     int ii = 0;
     int start = ii;
     int col = 0;
@@ -178,23 +152,6 @@ void scut_line(char *output, char *input, int *col_list, int *delim_locs)
     printf("\n");
 }
 
-// void scut_line(char* output, char* input, int* col_list, int* delim_locs){
-//     int out_idx = 0;
-//     int in_start, in_end;
-//     memset(output, '\0', 100);
-//     int num_cols = len_int(col_list);
-//     printf("\t[scut_line]\n");
-//     for (int delim = 0; delim < num_cols ; delim++){
-//         int i = col_list[delim]; //1
-//         in_start = delim_locs[i-1] + 1; //8
-//         in_end = delim_locs[i];
-//
-//         out_idx = assign_line(output, input, out_idx, in_start, in_end); //out_idx for the (i+1)th col.
-//         printf("\t\tin_start, in_end = (%d, %d)\n", in_start, in_end);
-//         //printf("%s\n", output);
-//     }
-//         reset_arr(output, out_idx-1, 100);  //out_idx-1 bc output string will have a delim after the last letter
-// }
 
 int assign_line(char *out, char *in, int out_start_curr, int in_start, int in_end)
 {
@@ -239,8 +196,14 @@ void reset_int_arr(int arr[], int start, int end, int val)
 //     }
 // }
 
-void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int output[])
-{
+void get_separation_locs(char input[], char delim_type, int startLoc, int endLoc, int output[]){
+    char delim;
+    if (delim_type == 'c'){
+        delim = ',';
+    }
+    else if (delim_type == '\n'){
+        delim = '\n';
+    }
     if (endLoc == -1)
     {
         endLoc = 100;
@@ -257,6 +220,26 @@ void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int
             output[ll++] = ii;
             break;
         }
+    }
+}
+void get_separation_locs_ws(char input[], int startLoc, int endLoc, int output[]){
+    if (endLoc == -1)
+    {
+        endLoc = 100;
+    }
+    int ll = 0;
+    for (int ii = startLoc; ii < endLoc; ii++)
+    {
+        if (input[ii] == ' ' ||input[ii] == '\t' || input[ii] == '\n')
+        {
+            output[ll++] = ii;
+        }
+        else if (input[ii] == '\0')
+        {
+            output[ll++] = ii;
+            break;
+        }
+        
     }
 }
 void scut_letters(char input[], int cols2keep[], char output[])
@@ -326,17 +309,29 @@ void parse_cmd_args2(char input[], int output[])
     int Start = 0;
     // int End = 0;
     int ii = 0;
+    int extra = 0;
     int commas[100] = {0};
     // int num;
-    get_separation_locs(input, ',', 0, -1, commas);
+    get_separation_locs(input, 'c', 0, -1, commas);
     while (commas[ii] > 0)
     {
         char dst[100] = {'\0'};
+        reset_char_arr(dst, 0,100);
         strcpy_(dst, input, 0, Start, commas[ii]);
+        if (checkCharLoc(dst, '-') >= 0){
+            int expandedList[100] = {-1};
+            reset_int_arr(expandedList, 0,100, -1);
+            int len = expandList(dst, expandedList);
+            intcpy_(output, expandedList, ii + extra, 0, len);
+            extra += (len -1);
+            Start = commas[ii] + 1;
+            ii++;
+        }else{
         int num = combineElements(dst, commas[ii] - Start);
         output[ii] = num;
         Start = commas[ii] + 1;
         ii++;
+        }
     }
 }
 int char2num(char Input)
@@ -356,6 +351,14 @@ int char2num(char Input)
 //         mult = mult*10;
 //     }
 // }
+int checkCharLoc(char input[],char b){
+    int ii = 0;
+    while(input[ii] != '\0'){
+        if (input[ii] == b) return ii;
+        ii++;
+    }
+    return -1;
+}
 int combineElements(char arr[], int cc)
 {
     int nums[100] = {-1};
@@ -369,17 +372,19 @@ int combineElements(char arr[], int cc)
             nums[ll] = temp;
         else
         {
-            int jj = ll;
             char dst[100] = {'\0'};
+            int expandedList[100] = {-1};
+            reset_int_arr(expandedList, 0,100, -1);
             int Size = len_char(arr);
             strcpy_(dst, arr, 0, ll + 1, Size);
-            int num2go2 = combineElements(dst, Size - ll - 1);
-            int Add = 1;
-            while (nums[jj - 1] != num2go2)
-            {
-                nums[jj++] = nums[ll - 1] + Add++;
-            }
-            ll = jj + 1;
+            expandList(dst, expandedList);
+//            int num2go2 = combineElements(dst, Size - ll - 1);
+//            int Add = 1;
+//            while (nums[jj - 1] != num2go2)
+//            {
+//                nums[jj++] = nums[ll - 1] + Add++;
+//            }
+//            ll = jj + 1;
         }
     }
     int out = 0;
@@ -390,6 +395,28 @@ int combineElements(char arr[], int cc)
         mult = mult * 10;
     }
     return out;
+}
+int expandList(char input[], int output[]){
+    int check = checkCharLoc(input,'-');
+    if(check < 0) return -1;
+    output[0] = combineElements(input, check);
+    int ll = 1;
+    while (input[ll] >=0){
+        int jj = ll;
+        char dst[100] = {'\0'};
+        int Size = len_char(input);
+        strcpy_(dst, input, 0, check + 1, Size);
+        int num2go2 = combineElements(dst, Size - check - 1);
+        int Add = 1;
+        while (output[jj - 1] != num2go2)
+        {
+            output[jj++] = output[ll - 1] + Add++;
+        }
+        return jj;
+        ll = jj + 1;
+    }
+    ll++;
+    return ll;
 }
 void parse_cmd_args(char *input, int *output)
 {
@@ -422,7 +449,8 @@ void parse_cmd_args(char *input, int *output)
             // printf("%d ", output[out_idx]);
             out_idx++;
             //memset(val, '0', 2);
-            reset_int_arr(val, 0, 2, 0);
+            reset_char_arr(val, 0, 2);
+            
         }
         output[out_idx] = -1;
     }
@@ -491,6 +519,16 @@ int find_double_digit(char *input)
 }
 
 void strcpy_(char dst[], char src[], int out_start, int in_start, int in_end)
+{
+    int len = in_end - in_start;
+    int in_i = in_start;
+    for (int out_i = out_start; out_i < out_start + len; out_i++)
+    {
+        dst[out_i] = src[in_i];
+        in_i++;
+    }
+}
+void intcpy_(int dst[], int src[], int out_start, int in_start, int in_end)
 {
     int len = in_end - in_start;
     int in_i = in_start;
@@ -597,7 +635,7 @@ int check_sel(char sel[])
         }
     }
     // check last char is a digit
-    if (atoi(&sel[i - 1]) == 0)
+    if (char2num(sel[i - 1]) < 0)
     {
         printf("Invalid selection.\n");
         return -1;
@@ -605,3 +643,80 @@ int check_sel(char sel[])
     else
         return 0;
 }
+
+
+void transform_input(char out[], char in[], char delim_type){
+    int in_start = 0, in_end = in_start+1;
+    int out_start=0;
+    int end_delim_loc;
+    char delim;
+    if (delim_type == 'c'){
+         delim = ',';
+    }
+        while (in[in_start] != '\0'){
+            if (in[in_start] == delim){
+                if (in[in_start+1] == delim){
+                    end_delim_loc = in_start +1;
+                    while (in[end_delim_loc] == delim)
+                        end_delim_loc++;
+                    
+                    strcpy_(out, in, out_start, in_start , in_start+1);
+                    in_start = end_delim_loc;
+                }
+                else{
+                    in_end = in_start+1;
+                    strcpy_(out, in, out_start, in_start , in_end);
+                    in_start++;
+                }
+                
+            }
+            else{
+                in_end = in_start+1;
+                strcpy_(out, in, out_start, in_start , in_end);
+                in_start++;
+            }
+            
+            out_start++;
+            //printf("%s\n", out);
+        }
+    
+                
+      
+}
+
+void transform_input_ws(char out[], char in[]){
+    int in_start = 0, in_end = in_start+1;
+    int out_start=0;
+    int end_delim_loc;
+    
+        while (in[in_start] != '\0'){
+            if (in[in_start] == ' ' || in[in_start] == '\t'){
+                if (in[in_start+1] == ' ' || in[in_start+1] == '\t'){
+                    end_delim_loc = in_start +1;
+                    while (in[end_delim_loc] == ' ' || in[end_delim_loc] == '\t')
+                        end_delim_loc++;
+                    
+                    strcpy_(out, in, out_start, in_start , in_start+1);
+                    in_start = end_delim_loc;
+                }
+                else{
+                    in_end = in_start+1;
+                    strcpy_(out, in, out_start, in_start , in_end);
+                    in_start++;
+                }
+                
+            }
+            else{
+                in_end = in_start+1;
+                strcpy_(out, in, out_start, in_start , in_end);
+                in_start++;
+            }
+            
+            out_start++;
+            //printf("%s\n", out);
+        }
+    
+                
+      
+}
+

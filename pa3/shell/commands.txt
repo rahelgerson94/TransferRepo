@@ -1,0 +1,4 @@
+(1)
+find . \( -name "*.c" -o -name "*.h" \) -and -type f | xargs grep 'printf' | tr -s ":" " " | cut -d " " -f1 | uniq | sort
+(2)
+history 50 | grep -E "ls|cd" | uniq | tr -d [:digit:] | sort

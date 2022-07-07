@@ -69,7 +69,7 @@ def expand(string):
     
     
 if __name__ == '__main__':
-    s = '\n\nalice,30,532,AZ,S\nbob,25,3411,CA,Z\njonas,40,8192,AZ,T\ngreg,50,400,UT,C'
+    s = "\n\nalice,30,532,AZ,S\nbob,25,3411,CA,Z\njonas,40,8192,AZ,T\ngreg,50,400,UT,C"
     mode = 'l'
     d = delim_locs(mode, s)
     n = delim_locs('n', s)
