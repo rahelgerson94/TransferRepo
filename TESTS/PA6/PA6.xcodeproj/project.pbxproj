@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6417976C287735C500246E3F /* zstr.c in Sources */ = {isa = PBXBuildFile; fileRef = 6417976B287735C500246E3F /* zstr.c */; };
-		6417976F28773C8100246E3F /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 6417976D28773C8100246E3F /* utils.c */; };
+		641EC868287F212600512600 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 641EC867287F212600512600 /* utils.c */; };
 		649756182874C1BB0078D223 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 649756172874C1BB0078D223 /* main.c */; };
 /* End PBXBuildFile section */
 
@@ -27,8 +27,8 @@
 /* Begin PBXFileReference section */
 		6417976A287735C500246E3F /* zstr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstr.h; sourceTree = "<group>"; };
 		6417976B287735C500246E3F /* zstr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstr.c; sourceTree = "<group>"; };
-		6417976D28773C8100246E3F /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
-		6417976E28773C8100246E3F /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		641EC866287F212600512600 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		641EC867287F212600512600 /* utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
 		649756142874C1BB0078D223 /* PA6 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PA6; sourceTree = BUILT_PRODUCTS_DIR; };
 		649756172874C1BB0078D223 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,8 +66,8 @@
 				6417976A287735C500246E3F /* zstr.h */,
 				6417976B287735C500246E3F /* zstr.c */,
 				649756172874C1BB0078D223 /* main.c */,
-				6417976D28773C8100246E3F /* utils.c */,
-				6417976E28773C8100246E3F /* utils.h */,
+				641EC866287F212600512600 /* utils.h */,
+				641EC867287F212600512600 /* utils.c */,
 			);
 			path = PA6;
 			sourceTree = "<group>";
@@ -129,7 +129,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6417976F28773C8100246E3F /* utils.c in Sources */,
+				641EC868287F212600512600 /* utils.c in Sources */,
 				6417976C287735C500246E3F /* zstr.c in Sources */,
 				649756182874C1BB0078D223 /* main.c in Sources */,
 			);

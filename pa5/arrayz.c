@@ -1,9 +1,10 @@
 //
-//  array.c
 //  pa5
-//
-//  Created by Rahel Gerson on 7/2/22.
-//
+// csc 352
+/*a library of functions for operating on arrays. the first part, utils,
+ is copy past of a seprate libbrary of widely used functions, so very few are actually used
+ in arrayz, but are inlcdued here for conveneice.
+*/
 
 #include "arrayz.h"
 
@@ -275,12 +276,12 @@ void printad(double values[]){//Print the elements in values. Formatted as: leng
     {
         if (i == len )
         {
-            printf("%.2f\n", values[i]);
+            printf("%f\n", values[i]);
             return;
         }
         else
         {
-            printf("%.2f, ", values[i]);
+            printf("%f, ", values[i]);
         }
     }
 }

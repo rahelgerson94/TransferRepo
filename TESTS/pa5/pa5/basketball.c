@@ -42,7 +42,7 @@ void pre_proc(char line[MAX], double stats[7], char name[100] ){
             long temp_temp_stats[3];
             str2long_list(stats_single_game, temp_temp_stats);
             longcpy_( temp_stats[l], temp_temp_stats,  1, 0, 3);
-            //printal(temp_stats[l]);
+            printal(temp_stats[l]);
             stats_idx = 0;
             l++;
             reset_char_arr(stats_single_game, 0, 10);
@@ -60,10 +60,10 @@ void pre_proc(char line[MAX], double stats[7], char name[100] ){
         R[l+1] = temp_stats[l][1+1]; //fetch 1st col
         A[l+1] = temp_stats[l][2+1]; //fetch 2nd col
     }
-//    printf("P: "); printal(P);
-//    printf("R: "); printal(R);
-//    printf("A: "); printal(A);
-//    printf("\n");
+    printf("P: "); printal(P);
+    printf("R: "); printal(R);
+    printf("A: "); printal(A);
+    printf("\n");
     /* populate the desired stats vector */
     stats[1+0] = sdev(P);
     stats[1+1] = sdev(R);

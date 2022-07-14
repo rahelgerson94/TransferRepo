@@ -97,12 +97,12 @@ void printad(double values[]){//Print the elements in values. Formatted as: leng
     {
         if (i == len )
         {
-            printf("%.2f\n", values[i]);
+            printf("%f\n", values[i]);
             return;
         }
         else
         {
-            printf("%.2f, ", values[i]);
+            printf("%f, ", values[i]);
         }
     }
 }

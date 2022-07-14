@@ -1,0 +1,19 @@
+Tested funcs
+zstr zstr_create(char* initial_data);
+void get_info(zstr z, int* data_len, int* total_bytes, char** data);
+void zstr_append(zstr * base, zstr to_append);
+void zstr_print_detailed(zstr data);
+int get_total_bytes(char* data);
+int zstr_index(zstr base, zstr to_search);
+int zstr_count(zstr base, zstr to_search);
+int zstr_compare(zstr x, zstr y);
+void zstr_destroy(zstr to_destroy); works except when to_destroy is an appended zstr.
+void set_info(zstr* z, int data_len, int total_bytes, char* data, int start);
+
+Funcs to test
+zstr zstr_substring(zstr base, int begin, int end);
+void set_status(zstr z, char* initial_data, zstr_code* zstr_status);
+
+
+funcs that do not work
+

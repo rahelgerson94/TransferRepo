@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/rahelmizrahi/Library/Mobile_Documents/com~apple~CloudDocs/csc352/cs352_pas/TESTS/pa5/data.txt"
+            argument = "/Users/rahelmizrahi/Library/Mobile_Documents/com~apple~CloudDocs/csc352/cs352_pas/TESTS/pa5/data100.txt"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

@@ -17,6 +17,8 @@ char names[100][100];
 double stats[100][7];
 
 int main(int argc, const char * argv[]) {
+    double arr[3] = {2, 2.43, 4.55};
+    printad(arr);
     if (!(argc == 2)){
         fprintf(stderr, "expects 1 command line argument\n");
         return 1;
@@ -36,19 +38,19 @@ int main(int argc, const char * argv[]) {
     while(fgets(curr_line, max, data) != NULL){
         //printf("%s", curr_line);
         pre_proc(curr_line, stats[l], names[l]);
-       
-        //printad(stats[l]);
+       //printad(stats[l]);
         
         l++;
     }
-    /*
-     for (int i = 0; i < 5; i++){
+    printf("l=%d\n",l);
+     for (int i = 0; i < 100; i++){
          printf("%s\n", names[i]);
      }
-     */
+     
    
     get_stats(stats,  names, l);
     /*CLEANUP*/
+    
     fclose(data);
     /*freeing data*/
     free(path);

@@ -7,35 +7,81 @@
 
 #include <stdio.h>
 #include "zstr.h"
+//zstr_code zstr_zstr_status;
+//zstr_code zstr_status;
+
+void test_substring();
+void test_append();
+void test_count();
+void test_create();
+void print_zstr_status();
+
 int main(int argc, const char * argv[]) {
-    char* initial_data = "giraffe";
-    int total_bytes = get_total_bytes(initial_data);
-    zstr z = calloc(total_bytes, sizeof(char));
-   
-    int* l = (int*)z;//l points to the same mem address as z. modifying the contents of one modifies the contents of the other.
-    *(l) = 2000; //store 2000 in 1st 4 bytes of z and l
-    *(l+1) = 2048;
-    *(z+8) = 'x';
-    printf("address of (z+8) = %p, contents: %c\n", z+8, *(z+8));
-    printf("address of (l+2) = %p, contents: %c\n", l+2, *(l+2));
+    /*
+     test_create();
+     test_substring();
+     test_append();
+     */
     
-   
-    //l
-    int i = 0;
-    for (int i = 0; i < 2; i++){
-        printf("%d\n", *(l+i));
-    }
-    i=8;
-    while (i < total_bytes){
-        if (*(z+i) == '\0') printf("%d. NULL\n", i);
-        else printf("%d. %c\n", i, *(z+i));
-        i++;
-        }
-    
-    free(z);
-    
-    
-    printf("%d\n",sizeof(char));
-    printf("%d\n",sizeof(int));
+    test_count();
     return 0;
 }
+
+void test_create(){
+    int bad_len = 2048;
+    char bad_data[2048];
+    for (int i = 0; i < bad_len; i++){
+        bad_data[i] = 'a';
+    }
+    zstr z = zstr_create(bad_data);
+    print_zstr_status();
+    if (zstr_status == ZSTR_OK) free(z);
+}
+void print_zstr_status(){
+    switch(zstr_status){
+        case 100: printf("zstr_status = ERROR\n"); break;
+        case 0: printf("zstr_status = OK\n"); break;
+    }
+}
+void test_substring( ){
+    printf("test_substring()\n");
+    zstr dna = zstr_create("my humps my lovely lady lumps");
+    zstr n = zstr_substring(dna, 2, 20); //" humps my lovely la"
+    
+    zstr_print_detailed(n);
+    zstr_destroy(dna);
+    zstr_destroy(n);
+    print_zstr_status();
+    printf("\n");
+}
+
+void test_append( ){
+    printf("test_append()\n");
+    zstr b = zstr_create("craps and ham");
+    zstr s = zstr_create("craps");
+    zstr_append(&b, s);
+    int dl, tl; char* d;
+    get_info(b, &dl, &tl , &d);
+    printf("data length: %d, total length: %d, data: %s\n", dl, tl, d);
+    zstr_destroy(s);
+    zstr_destroy(b);
+    print_zstr_status();
+    printf("\n");
+}
+
+void test_count( ){
+    printf("test_count()\n");
+    zstr b = zstr_create("does it have 4 legs?,does it have wheels?,does it have a motor?,does it have fur?");
+    zstr s = zstr_create("?");
+    int i = zstr_index(b, s);
+    printf("i: %d\n", i);
+    int count = zstr_count(b, s);
+    printf("count: %d\n", count);
+    
+    zstr_destroy(s);
+    zstr_destroy(b);
+    print_zstr_status();
+    printf("\n");
+}
+
+

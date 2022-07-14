@@ -1,7 +1,12 @@
 //  csc 352
 //  basketball.c
-//  pa5
-//  Created by Rahel Gerson on 7/2/22.
+//Rahel Gerson
+/*
+ This program will generate a report about NBA basketball players, based on data that it will read in from a text file.
+ This program uses several functions from the arrayz library, inluding the mean function and the sdev function.
+ the max input lines it can take is 100, and the max number of games is 100.
+ */
+
 #include "arrayz.h"
 #include <stdlib.h>
 #define max 1100
