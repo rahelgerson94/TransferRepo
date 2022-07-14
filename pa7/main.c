@@ -16,13 +16,12 @@ int num_qs;
 char* read_line(char* curr_buff, char** next_buff, char* temp, int* num_buffs);
 int main(int argc, const char * argv[]) {
     questions = calloc(BUFFSIZE, sizeof(char));
-    char* curr_data = calloc(BUFFSIZE, sizeof(char));
-    char* prev_data = calloc(BUFFSIZE, sizeof(char));
-    char* temp = calloc(BUFFSIZE, sizeof(char));
-    char* prev_data1 = calloc(BUFFSIZE, sizeof(char));
-    char* line1 = calloc(BUFFSIZE, sizeof(char));
-    char* path = calloc(strlen(argv[1]), sizeof(char));
-    
+    char* curr_data = calloc(1+BUFFSIZE, sizeof(char));
+    char* prev_data = calloc(1+BUFFSIZE, sizeof(char));
+    char* temp = calloc(1+BUFFSIZE, sizeof(char));
+    char* prev_data1 = calloc(1+BUFFSIZE, sizeof(char));
+    char* line1 = calloc(1+BUFFSIZE, sizeof(char));
+    char* path = calloc(1+strlen(argv[1])+1, sizeof(char));
     strcpy(path, argv[1]);
     FILE* data = fopen(path, "r");
     int l = 0;
@@ -30,7 +29,7 @@ int main(int argc, const char * argv[]) {
     while(fgets(curr_data, BUFFSIZE, data) != NULL){
         if (l == 0){ //number of qs
             num_qs = atoi(curr_data);
-            game_data = calloc(num_qs, sizeof(char*));
+            game_data = calloc(1+num_qs, sizeof(char*));
             //char* game_data[num_qs];
             l++;
             num_buffs = 1; //rst  num_buffs for next code block;
@@ -68,7 +67,7 @@ int main(int argc, const char * argv[]) {
                     char temp[BUFFSIZE*num_buffs]; memset(temp, '\0', BUFFSIZE*num_buffs);
                     strcpy_(temp, curr_data, 0, 0, BUFFSIZE*num_buffs);
                     line1 = read_line(temp, &prev_data1, line1, &num_buffs);
-                    *(game_data+ data_i) = calloc(len_char(line1), sizeof(char));
+                    *(game_data+ data_i) = calloc(1+len_char(line1), sizeof(char));
                     strcpy_(*(game_data+ data_i), line1, 0, 0, len_char(line1));
     #ifdef debug
                 printf("game_data[%d]:",data_i );
@@ -76,8 +75,8 @@ int main(int argc, const char * argv[]) {
     #endif
                     free(line1);
                     free(prev_data1);
-                    line1 = calloc(BUFFSIZE, sizeof(char));
-                    prev_data1 = calloc(BUFFSIZE, sizeof(char));
+                    line1 = calloc(1+BUFFSIZE, sizeof(char));
+                    prev_data1 = calloc(1+BUFFSIZE, sizeof(char));
                     num_buffs = 1;
                     l++;
                     continue;
@@ -85,7 +84,7 @@ int main(int argc, const char * argv[]) {
             }//data_i < num_qs -1
             else{// we are on the last line
                     line1 = read_line(curr_data, &prev_data1, line1, &num_buffs);
-                    *(game_data+ data_i) = calloc(len_char(line1), sizeof(char));
+                    *(game_data+ data_i) = calloc(1+len_char(line1), sizeof(char));
                     strcpy_(*(game_data+ data_i), line1, 0, 0, len_char(line1));
                 }//end NOT(data_i == num_qs -1)
             }//end l>=2
@@ -115,11 +114,11 @@ int main(int argc, const char * argv[]) {
 /*
  void read_line(char* curr_buff, char** prev_buff, char** line, int* num_buffs){
      free(*line);
-     *line =  calloc(BUFFSIZE*(*num_buffs), sizeof(char));
+     *line =  calloc(1+BUFFSIZE*(*num_buffs), sizeof(char));
      strcpy(*line, *prev_buff);
      strcat(*line, curr_buff);
      free(*prev_buff);
-     *prev_buff = calloc(BUFFSIZE*(*num_buffs), sizeof(char));
+     *prev_buff = calloc(1+BUFFSIZE*(*num_buffs), sizeof(char));
      strcpy(*prev_buff, *line);
      (*num_buffs)++;
     
@@ -129,12 +128,12 @@ int main(int argc, const char * argv[]) {
 char* read_line(char* curr_buff, char** prev_buff, char* line, int* num_buffs){
     
     free(line);
-    line =  calloc(BUFFSIZE*(*num_buffs), sizeof(char));
+    line =  calloc(1+BUFFSIZE*(*num_buffs), sizeof(char));
     //strcpy_(line, *prev_buff, 0, 0, BUFFSIZE*(*num_buffs));
     strcpy(line, *prev_buff);
     strcat(line, curr_buff);
     free(*prev_buff);
-    *prev_buff = calloc(BUFFSIZE*(*num_buffs), sizeof(char));
+    *prev_buff = calloc(1+BUFFSIZE*(*num_buffs), sizeof(char));
     strcpy(*prev_buff, line);
     (*num_buffs)++;
     return line;
@@ -142,8 +141,8 @@ char* read_line(char* curr_buff, char** prev_buff, char* line, int* num_buffs){
 
 void test_append(){
     printf("test_append()\n");
-    char* s1= calloc(10,sizeof(char));
-    char* s2 = calloc(10,sizeof(char));
+    char* s1= calloc(1+10,sizeof(char));
+    char* s2 = calloc(1+10,sizeof(char));
     strcpy(s1, "hello!!");
     strcpy(s2, "hi!");
     
