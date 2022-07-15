@@ -1,4 +1,3 @@
-
 /*
 zstring.c
 csc 352
@@ -125,8 +124,6 @@ int find_substr(char input[], char search[], int ind){
     }
     return -1;
 }
-
-/* end utils functions */
 zstr zstr_create(char* initial_data){
     /*
      hold the char array initial_data using the malloc function, store the string length
@@ -134,6 +131,10 @@ zstr zstr_create(char* initial_data){
      */
 
     int total_bytes = get_total_bytes(initial_data);
+    if (total_bytes == -1 ){
+        zstr_status = ZSTR_ERROR;
+        return NULL;
+    }
     int len_str = len_char(initial_data);
     zstr z = calloc(total_bytes, sizeof(char));
 
@@ -162,7 +163,6 @@ zstr zstr_create(char* initial_data){
         in_i++;
     }
     *(z+8+len_str) = '\0';
-
     return z+8; //return a pointer to the begining of data
 }
 
@@ -170,10 +170,19 @@ zstr zstr_create(char* initial_data){
 
 void zstr_destroy(zstr to_destroy){
     //printf("[destroy]head = %p\n", to_destroy-8);
-    free(to_destroy-8);
+    if (to_destroy == NULL) {
+        zstr_status = ZSTR_ERROR;
+        return;
+    }
+    else free(to_destroy-8);
+    
 }
 
 void zstr_append(zstr* base, zstr to_append){
+    if (*base == NULL || to_append == NULL){
+        zstr_status = ZSTR_ERROR;
+        return;
+    }
     int base_data_len,  to_append_data_len;
     int base_tot, to_append_tot;
     char* base_data; char* to_append_data;
@@ -188,31 +197,35 @@ void zstr_append(zstr* base, zstr to_append){
     strcpy_(new_data, to_append_data, base_data_len, 0, to_append_data_len);
     
     int new_tot = get_total_bytes(new_data);
-    
-    if ( new_tot > base_tot){ //if we don't have enough room
+    if (new_tot == -1) {
+        zstr_status = ZSTR_ERROR;
+        return;
+    }
+    else{
+        if ( new_tot > base_tot){ //if we don't have enough room
         zstr new_ = zstr_create(new_data);
         //new_ = *base;
         zstr_destroy(*base); //we freed the data, but the pointer lives on
         *base = new_;
-    }
-    else{ //if we do have enough room
-        base_data_len = len_char(new_data);
-        set_info(&(*base), base_data_len, base_tot, new_data, 8);
-        
-        /*
-         THIS WORKS AS AN ALT. TO set_info()
-         int* l = (int*)*base;
-         *(l-2) = base_data_len;
-         int in_i = 0;
-         for (int i = 0; i < base_data_len; i++){
-             *(*base + i) = *(new_data + in_i);
-             in_i++;
-         }
-         *(*(base)+8+to_append_data_len) = '\0';
-         */
-    }
+        }
+        else{ //if we do have enough room
+            base_data_len = len_char(new_data);
+            set_info(&(*base), base_data_len, base_tot, new_data, 8);
+            
+            /*
+             THIS WORKS AS AN ALT. TO set_info()
+             int* l = (int*)*base;
+             *(l-2) = base_data_len;
+             int in_i = 0;
+             for (int i = 0; i < base_data_len; i++){
+                 *(*base + i) = *(new_data + in_i);
+                 in_i++;
+             }
+             *(*(base)+8+to_append_data_len) = '\0';
+             */
+        }
     set_status(*base, new_data, &zstr_status, false, false, true);
-
+    }//else where combined data len <= 2048
 }
 
 
@@ -221,6 +234,10 @@ int zstr_count(zstr base, zstr to_search){
     count how many times to_search appears within base.
     return 0 if no match is found.
      */
+    if (base == NULL || to_search == NULL){
+        zstr_status = ZSTR_ERROR;
+        return 0;
+    }
     int count = 0;
     int bi = 0;
     while (base[bi] != '\0'){
@@ -234,27 +251,41 @@ int zstr_count(zstr base, zstr to_search){
 }
 
 int zstr_compare(zstr x, zstr y){
-    /*
-    return:
-     ZSTR_GREATER if x > y, ie if first non matching char in x is g.t than that in y
-     ZSTR_EQUAL if x == y, and
-     ZSTR_LESS if x < y. i.e if first non matching char in x is l.t than that in y
-     */
-    int x_data_len,  y_data_len;
-    int x_tot, y_tot;
-    char* x_data; char* y_data;
-    
-    get_info(x, &x_data_len, &x_tot, &x_data);
-    get_info(y, &y_data_len, &y_tot, &y_data);
-    
-    //iterate until one of the strings is null
-    int i = 0;
-    while (x[i] != '\0' || x[i] != '\0'){
-        if ((int)x[i] > (int)(y[i]))  return ZSTR_GREATER;
-        else if ((int)x[i] < (int)(y[i]))  return ZSTR_LESS;
-        else i++;
+    if (x == NULL && y == NULL){
+        zstr_status = ZSTR_ERROR;
+        return ZSTR_EQUAL;
     }
-    return ZSTR_EQUAL;
+    else if (x == NULL && !(y == NULL)){
+        zstr_status = ZSTR_ERROR;
+        return ZSTR_LESS;
+    }
+    else if (!(x == NULL) && y == NULL){
+        zstr_status = ZSTR_ERROR;
+        return ZSTR_GREATER;
+    }
+    else{ //neither is null
+        /*
+        return:
+         ZSTR_GREATER if x > y, ie if first non matching char in x is g.t than that in y
+         ZSTR_EQUAL if x == y, and
+         ZSTR_LESS if x < y. i.e if first non matching char in x is l.t than that in y
+         */
+        int x_data_len,  y_data_len;
+        int x_tot, y_tot;
+        char* x_data; char* y_data;
+        
+        get_info(x, &x_data_len, &x_tot, &x_data);
+        get_info(y, &y_data_len, &y_tot, &y_data);
+        
+        //iterate until one of the strings is null
+        int i = 0;
+        while (x[i] != '\0' || x[i] != '\0'){
+            if ((int)x[i] > (int)(y[i]))  return ZSTR_GREATER;
+            else if ((int)x[i] < (int)(y[i]))  return ZSTR_LESS;
+            else i++;
+        }
+        return ZSTR_EQUAL;
+    }
 }
 
 
@@ -264,14 +295,21 @@ zstr zstr_substring(zstr base, int begin, int end){
      between begin (inclusive) and end (exclusive). The function should ensure that the new zstr
      created uses the smallest zstr size in order to fit the substring.
      */
+    if (!(begin < end)) {
+        zstr_status = ZSTR_ERROR;
+        return NULL;
+    }
+    if (base == NULL){
+        zstr_status = ZSTR_ERROR;
+        return NULL;
+    }
+   
     int data_len = end-begin;
     char data[data_len];
     strcpy_(data, base, 0, begin, end);
     zstr z = zstr_create(data);
     set_status(z, data, &zstr_status, false, true, false);
-    if (!(begin < end)) {
-        zstr_status = ZSTR_ERROR;
-    }
+    
     
     return z;
 }
@@ -282,6 +320,10 @@ void zstr_print_detailed(zstr z){
     STRLENGTH: 20
     DATASIZE: 32
     STRING: >data<*/
+    if (z == NULL){
+        zstr_status = ZSTR_ERROR;
+        return ;
+    }
     int* l = (int*)(z-8);
     printf("STRLENGTH: %d\n", *(l));
     printf(" DATASIZE: %d\n", *(l+1));
@@ -325,6 +367,12 @@ void set_status(zstr z, char* data, zstr_code* zstr_status, bool init, bool subs
 }
 
 void get_info(zstr z, int* data_len, int* total_bytes, char** data){
+    if (z==NULL) {
+        *data_len = 0;
+        *total_bytes = 0;
+        *data=NULL;
+        return;
+    }
     int* l = (int*)(z-8);
     *data_len = *l;
     *total_bytes = *(l+1);
@@ -340,6 +388,10 @@ void get_info(zstr z, int* data_len, int* total_bytes, char** data){
 }
 
 void set_info(zstr* z, int data_len, int total_bytes, char* data, int start){
+    if (z==NULL){
+        zstr_status = ZSTR_ERROR;
+        return;
+    }
     /*
      z is an out param
      start should be:
@@ -386,6 +438,10 @@ int zstr_index(zstr base, zstr to_search){
      ex: if base = blafishes, to_search = fis,
      out should be 3
      */
+    if (base == NULL || to_search == NULL){
+        zstr_status = ZSTR_ERROR;
+        return -1;
+    }
     int ind = 0;
     int ll = 0; //iterator for the search term
     int out = ind;

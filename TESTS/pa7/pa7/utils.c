@@ -380,18 +380,18 @@ int count(char base[], char to_search[]){
     count how many times to_search appears within base.
     return 0 if no match is found.
      */
-#ifdef debug
-    printf("count()\n");
-#endif
+//#ifdef debug
+//    printf("count()\n");
+//#endif
     
     int count = 0;
     int bi = 0;
     while (base[bi] != '\0'){
         bi = find_substr(base, to_search, bi);
         if  (bi==-1) return count;
-#ifdef debug
-        printf("\tbi=%d\n", bi);
-#endif
+//#ifdef debug
+//        printf("\tbi=%d\n", bi);
+//#endif
         if (bi != -1) {
             count++;
             bi++;

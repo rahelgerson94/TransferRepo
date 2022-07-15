@@ -1,10 +1,9 @@
-//
-//  zstr.h
-//  PA6
-//
-//  Created by Rahel Gerson on 7/7/22.
-//
 
+/*
+ pa7
+ csc352
+ Rahel Gerson
+ */
 #ifndef zstr_h
 #define zstr_h
 
@@ -56,8 +55,11 @@ int checkCharLoc(char input[],char b);
 int combineElements(char arr[], int cc);
 void get_separation_locs(char input[], char delim_type, int startLoc, int endLoc, int output[]);
 int find_substr(char input[], char search[], int ind);
-
 /* end utils library */
+
+
+
+
 zstr zstr_create(char* initial_data);
 void zstr_destroy(zstr to_destroy);
 void zstr_append(zstr * base, zstr to_append);

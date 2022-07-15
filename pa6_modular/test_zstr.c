@@ -15,7 +15,7 @@ void test_append2();
 void test_count();
 void test_create();
 void print_zstr_status();
-void test_index();
+
 void test_compare();
 /*
  void test_substring( );
@@ -32,8 +32,7 @@ int main(int argc, const char * argv[]) {
     //test_append();
     //test_append2();
     //test_count();
-    //test_compare();
-    test_index();
+    test_compare();
     
     return 0;
 }
@@ -148,11 +147,4 @@ void test_compare(){
     printf("zstr_comp: %d\n", ans);
     print_zstr_status();
     
-}
-void test_index(){
-    zstr x = zstr_create("e");
-    zstr y = zstr_create("yote");
-    int ans = zstr_index(y,x);
-    printf("zstr_ind: %d\n", ans);
-    print_zstr_status();
 }
