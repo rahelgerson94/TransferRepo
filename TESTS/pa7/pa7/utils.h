@@ -38,10 +38,10 @@ int checkCharLoc(char input[],char b);
 int combineElements(char arr[], int cc);
 void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int output[]);
 int find_substr(char input[], char search[], int ind);
-
-int count(char base[], char to_search[]);
+int count_substr(char base[], char to_search[]);
+int count_char(char input[], char search);
 int index_(char base[], char to_search[]);
-char** delimit(char line[], char delim);
+void delimit(char line[], char delim, char* output[]);
 void str_append(char** base, char* to_append);
 
 

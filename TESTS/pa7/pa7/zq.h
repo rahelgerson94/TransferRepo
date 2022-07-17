@@ -21,19 +21,23 @@ typedef struct ZQDecisionTreeNode{
     struct ZQDecisionTreeNode* yes;
     struct ZQDecisionTreeNode* no;
 }ZQDecisionTreeNode;
+
 typedef struct ZQDecisionTree{
     ZQDecisionTreeNode* root;
 }ZQDecisionTree;
 
 /* functions*/
+void process(char** data, char delim, int num_lines, char* col1[], char* col2[]);
+void read_(FILE* data , int indices[], char*** file_data, int* num_lines);
+char* read_line(char* curr_buff, char** next_buff, char* temp, int* num_buffs );
+void parse_line(char* line, char delim, char** out1, char** out2);
+
+
+
 void ZQ_print_tree(ZQDecisionTree* root);
 ZQDecisionTree* ZQ_build_tree(char* file_name);
 void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name);
 void ZQ_free_tree(ZQDecisionTree* tree);
+ZQDecisionTree* ZQ_build_tree_helper(char** field, int num_levels, int curr_level);
 
-/* helper functions */
-ZQDecisionTreeNode* create_node(){
-    ZQDecisionTreeNode* n= malloc(1);
-    return n;
-}
 #endif /* zq_h */

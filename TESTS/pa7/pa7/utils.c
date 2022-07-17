@@ -374,8 +374,20 @@ int find_substr(char input[], char search[], int ind){
     }
     return -1;
 }
+/* return the number of times search appears in input*/
+int count_char(char input[], char search){
+    int ind = 0;
+    int count = 0;
+    while(input[ind] != '\0'){
+        if(input[ind] == search){
+            count++;
+        }
+        ind++;
+    }
+    return count;
+}
 
-int count(char base[], char to_search[]){
+int count_substr(char base[], char to_search[]){
     /*
     count how many times to_search appears within base.
     return 0 if no match is found.
@@ -398,6 +410,8 @@ int count(char base[], char to_search[]){
         }
     }return count;
 }
+
+
 
 //int         (char input[], char search[], int ind){
 int index_(char base[], char to_search[]){
@@ -429,21 +443,41 @@ int index_(char base[], char to_search[]){
     return -1;
 }
 
-//char** delimit(char line[], char delim){
-//    int num_lines = count(line, delim);
-//    char* elem;
-//    int i = 0;
-//    
-//}
+void delimit(char line[], char delim, char* output[]){
+    int num_lines = count_char(line, delim)+1;
+    int start, end;
+    
+    int delim_locs[num_lines];reset_int_arr(delim_locs, 0, num_lines, -1);
+    get_separation_locs(line, ',', 0, strlen(line), delim_locs);
+    
+    start = 0;
+    end = delim_locs[0];
+    int curr_size = end - start + 1; //includes space for null char
+    output[0] = calloc(curr_size, sizeof(char));
+    strcpy_(output[0], line, 0, start, end );
+    printf("%s\n", output[0]);
+    
+    for (int l = 1; l < num_lines; l++){
+        if (l == num_lines-1){
+            start = delim_locs[l-1]+1;
+            end = strlen(line);
+        }
+        else{
+            end = delim_locs[l];
+            start = delim_locs[l-1]+1;
+        }
+        curr_size = end - start + 1;
+        output[l] = calloc(curr_size, sizeof(char));
+        strcpy_(output[l], line, 0, start, end);
+        printf("%s\n", output[l]);
+    }
+}
 
 void str_append(char** base, char* to_append){
     int base_data_len,  to_append_data_len;
     int base_tot, to_append_tot;
-    
     base_data_len = len_char(*base);
     to_append_data_len = len_char(to_append);
-    
-    
     /*combine the data fields*/
     //char new_str[base_data_len+to_append_data_len+1];
     char* new_str = calloc(base_data_len+to_append_data_len+1, sizeof(char));
