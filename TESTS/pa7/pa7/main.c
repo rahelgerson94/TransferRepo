@@ -25,8 +25,10 @@ int main(int argc, const char * argv[]) {
         printf("%s\n", *(list+i));
 #endif
     ZQDecisionTree* tree = ZQ_build_tree(path);
+    ZQ_db_print_tree(tree);
     ZQ_populate_tree( tree, path);
-    ZQ_print_tree(tree);
+    //ZQ_print_tree(tree);
+
     //ZQ_populate_tree( tree, path);
 
     free(tree);

@@ -46,5 +46,8 @@ ZQDecisionTreeNode* ZQ_build_tree_helper(char** field, int num_levels, int curr_
 //void ZQ_populate_tree_helper(ZQDecisionTreeNode* node, char* field, int* map, int num_levels, int curr_level);
 void ZQ_populate_tree_helper(ZQDecisionTreeNode* node, char* field, int* map, int curr_lvl);
 
-void ZQ_create_node(ZQDecisionTreeNode* node);
+void ZQ_print_node_info(ZQDecisionTreeNode* node);
+void ZQ_db_print_tree_helper(ZQDecisionTreeNode* cur, int level);
+void ZQ_db_print_tree(ZQDecisionTree* tree);
+
 #endif /* zq_h */
