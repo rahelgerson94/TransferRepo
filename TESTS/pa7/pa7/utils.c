@@ -210,7 +210,7 @@ void str2int_list(char input[], int output[]){
     int extra = 0;
     int commas[100] = {0};
     // int num;
-    get_separation_locs(input, 'c', 0, -1, commas);
+    get_separation_locs(input, ',', 0, -1, commas);
     while (commas[ii] > 0)
     {
         char dst[100] = {'\0'};
@@ -442,13 +442,17 @@ int index_(char base[], char to_search[]){
     }
     return -1;
 }
-
+void print_spaces(int num_spaces){
+    for (int i = 0; i < num_spaces; i++){
+        printf(" ");
+    }
+}
 void delimit(char line[], char delim, char* output[]){
     int num_lines = count_char(line, delim)+1;
     int start, end;
     
     int delim_locs[num_lines];reset_int_arr(delim_locs, 0, num_lines, -1);
-    get_separation_locs(line, ',', 0, strlen(line), delim_locs);
+    get_separation_locs(line, delim, 0, strlen(line), delim_locs);
     
     start = 0;
     end = delim_locs[0];
@@ -469,7 +473,7 @@ void delimit(char line[], char delim, char* output[]){
         curr_size = end - start + 1;
         output[l] = calloc(curr_size, sizeof(char));
         strcpy_(output[l], line, 0, start, end);
-        printf("%s\n", output[l]);
+        //printf("%s\n", output[l]);
     }
 }
 

@@ -43,6 +43,6 @@ int count_char(char input[], char search);
 int index_(char base[], char to_search[]);
 void delimit(char line[], char delim, char* output[]);
 void str_append(char** base, char* to_append);
-
+void print_spaces(int num_spaces);
 
 #endif /* utils_h */

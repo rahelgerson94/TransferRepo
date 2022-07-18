@@ -20,13 +20,17 @@ int main(int argc, const char * argv[]) {
     char* line = "apple,cat,dog,baby";
     char* list[4];
     delimit(line, ',', list);
-
-    for (int i = 0; i < 3+1; i++){
+#ifdef db_preproc
+    for (int i = 0; i < 3+1; i++)
         printf("%s\n", *(list+i));
-    }
+#endif
     ZQDecisionTree* tree = ZQ_build_tree(path);
-    
-   
+    ZQ_populate_tree( tree, path);
+    ZQ_print_tree(tree);
+    //ZQ_populate_tree( tree, path);
+
+    free(tree);
+    free(path);
     return 0;
 }
 
