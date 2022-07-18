@@ -109,6 +109,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
 
 ZQDecisionTreeNode* ZQ_build_tree_helper(char** questions, int num_levels, int curr_lvl ){
     ZQDecisionTreeNode* node = malloc(sizeof(ZQDecisionTreeNode));
+    
     if (curr_lvl == num_levels){ //answer nodes (don't pop. q field)
         node->yes = NULL;
         node->no = NULL;
