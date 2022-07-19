@@ -1,7 +1,7 @@
 //#define db_preproc
 //#define db_build
 #define db_pop
-//#define db_print
+#define db_print
 #define BUFFSIZE 10
 #include "zq.h"
 #include "utils.h"
@@ -16,11 +16,41 @@ void ZQ_print_tree(ZQDecisionTree* tree){
 }
 void ZQ_print_tree_helper(ZQDecisionTreeNode* cur, int level){
     /* print out a text representation of a decision tree. */
-    if (cur == NULL)
-        return;
+    if (cur->yes->yes == NULL ||
+        cur->yes->no == NULL ||
+        cur->no->yes == NULL ||
+        cur->no->no == NULL ){ //we are one before last level
+        
+        if (cur->yes->answers == NULL){
+            print_spaces(level);
+            printf("-y->\n");
+        }
+            
+        else{
+            print_spaces(level);
+            printf("-y-> | \n");
+            for (int i = 0; cur->yes->answers[i] != NULL; i++)
+                printf("%s | ",cur->yes->answers[i]);
+            printf("\n");
+        }
+        
+        
+        if (cur->no->answers == NULL){
+            print_spaces(level);
+            printf("-n->\n");
+        }
+            
+        else{
+            print_spaces(level);
+            printf("-n-> |\n"); 
+            for (int i = 0; cur->no->answers[i] != NULL; i++)
+                printf("%s | ",cur->no->answers[i]);
+            printf("\n");
+        }
+    } //end case where we are one before last level
+    
     else{
         //print_spaces(level); printf("[%s]\n", cur->text);
-        
         print_spaces(level);
         if (cur->yes == NULL) printf("-y->\n");
         else printf("-y-> [%s]\n",cur->yes->text);
@@ -43,27 +73,49 @@ void ZQ_db_print_tree(ZQDecisionTree* tree){
 
 void ZQ_db_print_tree_helper(ZQDecisionTreeNode* cur, int level){
     /* print out a text representation of a decision tree. */
-    if (cur == NULL)
+    
+    if ((cur->yes->yes == NULL && //check the yes answers node
+         cur->yes->no == NULL) ||
+        (cur->no->yes == NULL && //check the no answers node
+        cur->no->no == NULL)){
+#ifdef db_print
+        //print_spaces(level); printf("we're at answers!"); //debug
+#endif
+        print_spaces(level); printf("-y->\n");
+        if (cur->yes->num_answers > 0){
+            for (int i = 0; i < cur->num_answers; i++)
+                printf(" > %s < ",cur->answers[i]);
+        }//if num_answers > 0
+        print_spaces(level); printf("-n->\n");
+        if (cur->no->num_answers > 0){
+            for (int i = 0; i < cur->num_answers; i++)
+                printf(" > %s < ",cur->answers[i]);
+        }//if num_answers > 0
         return;
+    } //end if no and yes are NULL
     else{
         //print_spaces(level); printf("[%s]\n", cur->text);
-        
         print_spaces(level);
-        if (cur->yes == NULL) printf("-y->\n");
+        if (cur->yes == NULL) {printf("-y->\n");  printf("num_answers = %d\n", cur->yes->num_answers);}
         else printf("-y-> [%s] num_answers = %d\n",cur->yes->text, cur->yes->num_answers);
-        ZQ_print_tree_helper(cur->yes, level+1);
+        ZQ_db_print_tree_helper(cur->yes, level+1);
         
         print_spaces(level);
-        if (cur->no == NULL) printf("-n->\n");
+        if (cur->no == NULL) {printf("-n->\n"); printf("num_answers = %d\n", cur->no->num_answers);}
         else printf("-n-> [%s] num_answers = %d\n",cur->no->text, cur->no->num_answers);
-        ZQ_print_tree_helper(cur->no, level+1);
+        ZQ_db_print_tree_helper(cur->no, level+1);
         //print_spaces(level);
     }
-    
 }
+
 void ZQ_print_node_info(ZQDecisionTreeNode* node){
-    printf("question: %s\n", node->text);
+    printf("question: %s\t", node->text);
     printf("num_answers: %d\n", node->num_answers);
+    if (node->answers != NULL){
+        for (int i = 0; node->answers[i] != NULL; i++)
+            printf("\t%s\t",node->answers[i]);
+    }
+    printf("\n");
 }
 
 ZQDecisionTree* ZQ_build_tree(char* file_name){
@@ -86,7 +138,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
     delimit(questions, ',', qs_list);
     ZQDecisionTree* tree = malloc(sizeof(tree));
     int curr_lvl = 0;
-    tree->root = ZQ_build_tree_helper(qs_list, num_levels, curr_lvl);
+    tree->root = ZQ_build_tree_helper(qs_list, num_levels+1, curr_lvl);
  /* ***************************  CLEANUP ******************************************* */
 
     for (int i = 0; i < num_lines+1; i++)
@@ -108,8 +160,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
 }
 
 ZQDecisionTreeNode* ZQ_build_tree_helper(char** questions, int num_levels, int curr_lvl ){
-    ZQDecisionTreeNode* node = malloc(sizeof(ZQDecisionTreeNode));
-    
+    ZQDecisionTreeNode* node = calloc(sizeof(ZQDecisionTreeNode),1);
     if (curr_lvl == num_levels){ //answer nodes (don't pop. q field)
         node->yes = NULL;
         node->no = NULL;
@@ -117,12 +168,13 @@ ZQDecisionTreeNode* ZQ_build_tree_helper(char** questions, int num_levels, int c
         node->answers = NULL;
     }
     else{ //question nodes (pop. q. fields)
-        strcpy(node->text,  *(questions+curr_lvl));
+        //strcpy(node->text,  *(questions+curr_lvl));
         if (curr_lvl == num_levels-1){
+            strcpy(node->text,  *(questions+curr_lvl));
             node->yes = NULL;
             node->no = NULL;
-            node->num_answers = 0;
             node->answers = NULL;
+            node->num_answers = -1;
         }
         else{
             node->yes = ZQ_build_tree_helper(questions, num_levels, curr_lvl+1);
@@ -170,7 +222,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
 #ifdef  db_preproc
         print_int_arr(answers);
 #endif
-        ZQ_populate_tree_helper(tree->root, objects[i], answers, 0);
+        ZQ_populate_tree_helper(tree->root, objects[i], answers, 0 , num_lvls); //num_lvls+1 for the answer nodes
     }
     
  /* ***************************  CLEANUP ******************************************* */
@@ -187,57 +239,55 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
  from the file, following the correct yes/no paths through the tree.
  */
 }
-void ZQ_free_tree(ZQDecisionTree* tree){
-    /* free all memory associated with tree.*/
-}
 
 
-//void ZQ_populate_tree_helper(ZQDecisionTree* tree, ZQDecisionTreeNode node, char* field, int* map, int num_levels, int curr_level){
-//void ZQ_populate_tree_helper(ZQDecisionTreeNode* node, char* field, int* map, int num_levels, int curr_level){
-//    if (curr_level == num_levels) {
-//        int idx = node->num_answers;
-//        node->answers[idx] = field;
-//        node->num_answers++;
-//        return;
-//    }
-//    else{
-//        switch(*map+curr_level){
-//            case 0:
-//                ZQ_populate_tree_helper(node->no, field, map, num_levels, curr_lvl);
-//            break;
-//            case 1:
-//            break;
-//        }
-//    }
-//}//end ZQ_populate_tree_helper
-
-void ZQ_populate_tree_helper(ZQDecisionTreeNode* curr, char* field, int* map, int curr_lvl){
+void ZQ_populate_tree_helper(ZQDecisionTreeNode* curr, char* field, int* map, int curr_lvl, int num_lvls){
+    int idx;
 #ifdef db_pop
-    print_spaces(curr_lvl); ZQ_print_node_info(curr);
+//    printf("cur_lvl: %d\n", curr_lvl);print_spaces(curr_lvl); ZQ_print_node_info(curr); printf("map[%d] = %d\n", curr_lvl, *(map+curr_lvl));
+//    printf("\n");
 #endif
-    if (curr->yes == NULL) { //we are at the answer nodes
-        int idx = curr->yes->num_answers;
-        curr->yes->answers[idx] = field;
-        curr->num_answers++;
-        return;
-    }
-    if (curr->no == NULL) { //we are at the answer nodes
-        int idx = curr->no->num_answers;
-        curr->no->answers[idx] = field;
-        curr->no->num_answers++;
+    if (curr_lvl == num_lvls-2) { //we are one level before the answer node level
+        switch(*(map+curr_lvl)){
+            case 1:
+                idx = curr->yes->num_answers;
+                curr->yes->answers = realloc(curr->yes->answers, sizeof(char*)*(idx+1)); //add a new elem to list
+                curr->yes->answers[idx] = calloc(sizeof(field), 1);
+                strcpy(curr->yes->answers[idx], field);
+                curr->num_answers++;
+#ifdef db_pop
+                print_spaces(num_lvls); printf("-y->"); printf("%s\n", curr->yes->answers[idx]);
+#endif
+            break;
+            case 0:
+                idx = curr->no->num_answers;
+                curr->no->answers = realloc(curr->yes->answers, sizeof(char*)*(idx+1));
+                curr->no->answers[idx] = calloc(sizeof(field), 1);
+                strcpy(curr->no->answers[idx], field);
+                curr->num_answers++;
+#ifdef db_pop
+                print_spaces(num_lvls); printf("-n->"); printf("%s\n", curr->no->answers[idx]);
+#endif
+            break;
+        }
         return;
     }
     else{
         switch(*(map+curr_lvl)){
             case 0:
-                ZQ_populate_tree_helper(curr->no, field, map, curr_lvl+1);
+                ZQ_populate_tree_helper(curr->no, field, map, curr_lvl+1, num_lvls);
             break;
             case 1:
-                ZQ_populate_tree_helper(curr->yes, field, map, curr_lvl+1);
+                ZQ_populate_tree_helper(curr->yes, field, map, curr_lvl+1, num_lvls);
             break;
         }
     }
 }//end ZQ_populate_tree_helper
+
+void ZQ_free_tree(ZQDecisionTree* tree){
+    /* free all memory associated with tree.*/
+}
+
 /* helper functions */
 
 /* this function splits the data contained in data and places it into col1 and col2, based on a delimter.
