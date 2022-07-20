@@ -1,5 +1,0 @@
-3
-abcdefghijklmnopqrstuvwxyz
-car,0,1,1,0
-fox,1,0,0,1
-elephant,1,0,0,0

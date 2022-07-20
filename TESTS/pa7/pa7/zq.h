@@ -39,7 +39,8 @@ void ZQ_print_tree_helper(ZQDecisionTreeNode* curr, int level);
 ZQDecisionTree* ZQ_build_tree(char* file_name);
 void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name);
 void ZQ_free_tree(ZQDecisionTree* tree);
-ZQDecisionTreeNode* ZQ_build_tree_helper(char** field, int num_levels, int curr_level);
+void ZQ_free_tree_helper(ZQDecisionTreeNode* cur, int level);
+ZQDecisionTreeNode* ZQ_build_tree_helper(char** field, int curr_level, int num_levels, int num_poss_answers);
 
 //void ZQ_populate_tree_helper(ZQDecisionTreeNode* tree, ZQDecisionTreeNode node, char* field, int* map, int num_levels, int curr_level);
 
