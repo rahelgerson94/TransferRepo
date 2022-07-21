@@ -14,8 +14,8 @@
             filePath = "pa7/main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
             landmarkName = "main(argc, argv)"
             landmarkType = "9">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "pa7/main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
             landmarkName = "main(argc, argv)"
             landmarkType = "9">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "pa7/zq.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "202"
+            endingLineNumber = "202"
             landmarkName = "ZQ_populate_tree(tree, file_name)"
             landmarkType = "9">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "pa7/zq.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "226"
+            endingLineNumber = "226"
             landmarkName = "ZQ_populate_tree_helper(curr, field, map, curr_lvl, num_lvls)"
             landmarkType = "9">
          </BreakpointContent>
@@ -78,25 +78,9 @@
             filePath = "pa7/main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "27"
-            endingLineNumber = "27"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
             landmarkName = "main(argc, argv)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "42DE63CF-87B1-4C8B-9128-4F44B31EE0D3"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pa7/zq.c"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
-            landmarkName = "ZQ_build_tree(file_name)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -110,8 +94,8 @@
             filePath = "pa7/zq.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "ZQ_build_tree(file_name)"
             landmarkType = "9">
          </BreakpointContent>
@@ -126,8 +110,8 @@
             filePath = "pa7/zq.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "370"
-            endingLineNumber = "370"
+            startingLineNumber = "388"
+            endingLineNumber = "388"
             landmarkName = "read_(data, indices, file_data, num_lines)"
             landmarkType = "9">
          </BreakpointContent>

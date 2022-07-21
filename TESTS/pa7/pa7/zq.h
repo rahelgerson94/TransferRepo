@@ -28,7 +28,7 @@ typedef struct ZQDecisionTree{
 
 /* functions*/
 void process(char** data, char delim, int num_lines, char* col1[], char* col2[]);
-void read_(FILE* data , int indices[], char*** file_data, int* num_lines);
+void read_(FILE* data , int indices[], char* file_data[], int* num_lines);
 char* read_line(char* curr_buff, char** next_buff, char* temp, int* num_buffs );
 void parse_line(char* line, char delim, char** out1, char** out2);
 

@@ -1,4 +1,4 @@
-//#define db_preproc
+#define db_preproc
 //#define db_build
 #define db_pop
 #define db_print
@@ -82,9 +82,17 @@ void ZQ_print_node_info(ZQDecisionTreeNode* node){
 ZQDecisionTree* ZQ_build_tree(char* file_name){
     FILE* data = fopen(file_name, "r");
     int indices[1]  = {0};
-    char** file_data;
     int num_lines;
-    read_(data, indices, &file_data, &num_lines);
+    char temp_int[10];
+    fgets(temp_int, BUFFSIZE, data);
+    fclose(data);
+    
+    num_lines = atoi(temp_int);
+    char* file_data[num_lines];
+    data = fopen(file_name, "r");
+    int dummy;
+    read_(data, indices, file_data, &dummy);
+    
 #ifdef  db_build
     printf("\nZQ_build_tree()\n");
     for (int i = 0; i < num_lines+1; i++){
@@ -92,7 +100,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
     }
     printf("\n");
 #endif
-    char* questions = *(file_data+0);
+    char* questions = file_data[0];
     int num_levels = count_char(questions, '?');
     
     char* qs_list[num_lines];
@@ -103,7 +111,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
 
     for (int i = 0; i < num_lines+1; i++)
         free(*(file_data+ i));
-    free(file_data);
+    //free(file_data);
     
     for (int i = 0; i < num_levels; i++)
         free(*(qs_list+ i));
@@ -153,11 +161,21 @@ ZQDecisionTreeNode* ZQ_build_tree_helper(char** questions,  int curr_lvl, int nu
 
 void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     FILE* data = fopen(file_name, "r");
-    int indices[1]  = {0};
-    char** file_data;
     int num_lines;
-    read_(data, indices, &file_data, &num_lines);
+    char temp_int[10];
+    fgets(temp_int, BUFFSIZE, data);
+    fclose(data);
+    data = fopen(file_name, "r");
+    num_lines = atoi(temp_int);
+    printf("temp_int = %d\n", num_lines);
+    char* file_data[num_lines];
+    
+    int dummy;
+    
+    int indices[1]  = {0};
+    read_(data, indices, file_data, &dummy);
     int num_lvls = count_char(*(file_data+0), '?');
+    printf("num_lvls = %d\n", num_lvls);
 #ifdef  db_preproc
     printf("\nZQ_populate_tree()\n");
     for (int i = 0; i < num_lines+1; i++){
@@ -190,7 +208,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
         free(*(answers_temp+ i));
     for (int i = 0; i < num_lines+1; i++)
         free(*(file_data+ i));
-    free(file_data);
+    //free(file_data);
 /*
  This takes a previously-built tree and a char* with the name of the data file.
  The function populates the tree with the answers within the correct leaf nodes based on the data
@@ -344,7 +362,7 @@ char* read_line(char* curr_buff, char** prev_buff, char* line, int* num_buffs){
 /* this function stores the info contained in a file in a variable, file_data
  the first line must contain the number of lines in the file
  file_data,then   stores all lines except the first */
-void read_(FILE* data , int indices[], char*** file_data, int* num_lines){
+void read_(FILE* data , int indices[], char* file_data[], int* num_lines){
     /*
      indices: the lines that are to be treated as special
      */
@@ -375,8 +393,11 @@ void read_(FILE* data , int indices[], char*** file_data, int* num_lines){
                     char temp_[BUFFSIZE*num_buffs]; memset(temp_, '\0', BUFFSIZE*num_buffs);
                     strcpy_(temp_, curr_data, 0, 0, BUFFSIZE*num_buffs);
                     line = read_line(temp_, &prev_data, line, &num_buffs);
-                    *(*file_data+ data_i) = calloc(1+len_char(line), sizeof(char));
-                    strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+                    
+                    //*(*file_data+ data_i) = calloc(1+len_char(line), sizeof(char));
+                    //strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+                    file_data[data_i] = calloc(1+len_char(line), sizeof(char));
+                    strcpy_(file_data[data_i], line, 0, 0, len_char(line));
 //    #ifdef debug
 //                    printf("file_data[%d]:", data_i);
 //                    printf("%s\n", *(*file_data+ data_i));
@@ -392,10 +413,14 @@ void read_(FILE* data , int indices[], char*** file_data, int* num_lines){
             }//end l < num_lines - 1
             else{
                 line = read_line(curr_data, &prev_data, line, &num_buffs);
-                *(*file_data+ data_i) = calloc(1+ len_char(line), sizeof(char));
-                strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+                //*(*file_data+ data_i) = calloc(1+ len_char(line), sizeof(char));
+                //strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+                file_data[data_i] = calloc(1+ len_char(line), sizeof(char));
+                strcpy_(file_data[data_i], line, 0, 0, len_char(line));
+//    #ifdef debug
+                
 #ifdef db_preproc
-                printf("%s\n", *(*file_data+ data_i));
+                printf("%s\n", file_data[data_i]);
 #endif
                 }//end NOT(data_i == num_lines -1)
             }//end l ≠ 0

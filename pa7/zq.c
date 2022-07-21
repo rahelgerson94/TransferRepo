@@ -69,7 +69,6 @@ int len_char(char arr[]){
     return len;
 }
 
-
 void reset_char_arr(char arr[], int start, int end){
     for (int i = start; i < end; i++)
     {
@@ -197,180 +196,6 @@ void longcpy_(long dst[], long src[], int out_start, int in_start, int in_end)
     }
 }
 
-void str2long_list(char input[], long output[]){
-    int Start = 0;
-    // int End = 0;
-    int ii = 0;
-    int extra = 0;
-    int commas[100] = {0};
-    // int num;
-    get_separation_locs(input, 'c', 0, -1, commas);
-    while (commas[ii] > 0)
-    {
-        char dst[100] = {'\0'};
-        reset_char_arr(dst, 0,100);
-        strcpy_(dst, input, 0, Start, commas[ii]);
-        if (checkCharLoc(dst, '-') >= 0){
-            long expandedList[100] = {-1};
-            reset_long_arr(expandedList, 0,100, -1);
-            int len = expandListLong(dst, expandedList);
-            longcpy_(output, expandedList, ii + extra, 0, len);
-            extra += (len -1);
-            Start = commas[ii] + 1;
-            ii++;
-        }else{
-        int num = combineElements(dst, commas[ii] - Start);
-        output[ii] = num;
-        Start = commas[ii] + 1;
-        ii++;
-        }
-    }
-}
-
-void str2int_list(char input[], int output[]){
-    int Start = 0;
-    // int End = 0;
-    int ii = 0;
-    int extra = 0;
-    int commas[100] = {0};
-    // int num;
-    get_separation_locs(input, ',', 0, -1, commas);
-    while (commas[ii] > 0)
-    {
-        char dst[100] = {'\0'};
-        reset_char_arr(dst, 0,100);
-        strcpy_(dst, input, 0, Start, commas[ii]);
-        if (checkCharLoc(dst, '-') >= 0){
-            int expandedList[100] = {-1};
-            reset_int_arr(expandedList, 0,100, -1);
-            int len = expandList(dst, expandedList);
-            intcpy_(output, expandedList, ii + extra, 0, len);
-            extra += (len -1);
-            Start = commas[ii] + 1;
-            ii++;
-        }else{
-        int num = combineElements(dst, commas[ii] - Start);
-        output[ii] = num;
-        Start = commas[ii] + 1;
-        ii++;
-        }
-    }
-}
-
-int expandList(char input[], int output[]){
-    int check = checkCharLoc(input,'-');
-    if(check < 0) return -1;
-    output[0] = combineElements(input, check);
-    int ll = 1;
-    while (input[ll] >=0){
-        int jj = ll;
-        char dst[100] = {'\0'};
-        int Size = len_char(input);
-        strcpy_(dst, input, 0, check + 1, Size);
-        int num2go2 = combineElements(dst, Size - check - 1);
-        int Add = 1;
-        while (output[jj - 1] != num2go2)
-        {
-            output[jj++] = output[ll - 1] + Add++;
-        }
-        return jj;
-        ll = jj + 1;
-    }
-    ll++;
-    return ll;
-}
-int expandListLong(char input[], long output[]){
-    int check = checkCharLoc(input,'-');
-    if(check < 0) return -1;
-    output[0] = combineElements(input, check);
-    int ll = 1;
-    while (input[ll] >=0){
-        int jj = ll;
-        char dst[100] = {'\0'};
-        int Size = len_char(input);
-        strcpy_(dst, input, 0, check + 1, Size);
-        int num2go2 = combineElements(dst, Size - check - 1);
-        int Add = 1;
-        while (output[jj - 1] != num2go2)
-        {
-            output[jj++] = output[ll - 1] + Add++;
-        }
-        return jj;
-        ll = jj + 1;
-    }
-    ll++;
-    return ll;
-}
-
-int char2num(char Input)
-{
-    int out = Input - '0';
-    if (out > 9 || out < 0)
-    {
-        return -1;
-    }
-    return out;
-}
-
-int checkCharLoc(char input[],char b){
-    int ii = 0;
-    while(input[ii] != '\0'){
-        if (input[ii] == b) return ii;
-        ii++;
-    }
-    return -1;
-}
-
-int combineElements(char arr[], int cc){
-    int nums[100] = {-1};
-
-    for (int ll = 0; ll < cc; ll++)
-    {
-
-        int temp = char2num(arr[ll]);
-        // TODO : fix the zero problem
-        if (temp >= 0)
-            nums[ll] = temp;
-        else
-        {
-            char dst[100] = {'\0'};
-            int expandedList[100] = {-1};
-            reset_int_arr(expandedList, 0,100, -1);
-            int Size = len_char(arr);
-            strcpy_(dst, arr, 0, ll + 1, Size);
-            expandList(dst, expandedList);
-        }
-    }
-    int out = 0;
-    int mult = 1;
-    for (int ii = cc - 1; ii >= 0; ii--)
-    {
-        out += nums[ii] * mult;
-        mult = mult * 10;
-    }
-    return out;
-}
-
-void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int output[]){
-    if (endLoc == -1)
-    {
-        endLoc = 100;
-    }
-    int ll = 0;
-    for (int ii = startLoc; ii < endLoc; ii++)
-    {
-        if (input[ii] == delim || input[ii] == '\n')
-        {
-            output[ll++] = ii;
-        }
-        else if (input[ii] == '\0')
-        {
-            output[ll++] = ii;
-            break;
-        }
-    }
-}
-
 int find_substr(char input[], char search[], int ind){
     /* return the index in input where search appears
      ex: if input = blafishes, search = fis,
@@ -471,6 +296,197 @@ void print_spaces(int num_spaces){
         printf(" ");
     }
 }
+
+
+void str_append(char** base, char* to_append){
+    int base_data_len,  to_append_data_len;
+    base_data_len = len_char(*base);
+    to_append_data_len = len_char(to_append);
+    /*combine the data fields*/
+    //char new_str[base_data_len+to_append_data_len+1];
+    char* new_str = calloc(base_data_len+to_append_data_len+1, sizeof(char));
+    //char* new_data = NULL;
+    strcpy_(new_str, *base, 0, 0, base_data_len);
+    strcpy_(new_str, to_append, base_data_len, 0, to_append_data_len);
+#ifdef debug
+    printf("str_append()\n", new_str);
+    printf("\t%s\n", new_str);
+#endif
+    free(*base);
+    *base = new_str;
+}
+
+int checkCharLoc(char input[],char b){
+    int ii = 0;
+    while(input[ii] != '\0'){
+        if (input[ii] == b) return ii;
+        ii++;
+    }
+    return -1;
+}
+int char2num(char Input)
+{
+    int out = Input - '0';
+    if (out > 9 || out < 0)
+    {
+        return -1;
+    }
+    return out;
+}
+
+
+int expandList(char input[], int output[]){
+    int check = checkCharLoc(input,'-');
+    if(check < 0) return -1;
+    output[0] = combineElements(input, check);
+    int ll = 1;
+    while (input[ll] >=0){
+        int jj = ll;
+        char dst[100] = {'\0'};
+        int Size = len_char(input);
+        strcpy_(dst, input, 0, check + 1, Size);
+        int num2go2 = combineElements(dst, Size - check - 1);
+        int Add = 1;
+        while (output[jj - 1] != num2go2)
+        {
+            output[jj++] = output[ll - 1] + Add++;
+        }
+        return jj;
+        ll = jj + 1;
+    }
+    ll++;
+    return ll;
+}
+int expandListLong(char input[], long output[]){
+    int check = checkCharLoc(input,'-');
+    if(check < 0) return -1;
+    output[0] = combineElements(input, check);
+    int ll = 1;
+    while (input[ll] >=0){
+        int jj = ll;
+        char dst[100] = {'\0'};
+        int Size = len_char(input);
+        strcpy_(dst, input, 0, check + 1, Size);
+        int num2go2 = combineElements(dst, Size - check - 1);
+        int Add = 1;
+        while (output[jj - 1] != num2go2)
+        {
+            output[jj++] = output[ll - 1] + Add++;
+        }
+        return jj;
+        ll = jj + 1;
+    }
+    ll++;
+    return ll;
+}
+int combineElements(char arr[], int cc){
+    int nums[100] = {-1};
+
+    for (int ll = 0; ll < cc; ll++)
+    {
+
+        int temp = char2num(arr[ll]);
+        // TODO : fix the zero problem
+        if (temp >= 0)
+            nums[ll] = temp;
+        else
+        {
+            char dst[100] = {'\0'};
+            int expandedList[100] = {-1};
+            reset_int_arr(expandedList, 0,100, -1);
+            int Size = len_char(arr);
+            strcpy_(dst, arr, 0, ll + 1, Size);
+            expandList(dst, expandedList);
+        }
+    }
+    int out = 0;
+    int mult = 1;
+    for (int ii = cc - 1; ii >= 0; ii--)
+    {
+        out += nums[ii] * mult;
+        mult = mult * 10;
+    }
+    return out;
+}
+
+void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int output[]){
+    if (endLoc == -1)
+    {
+        endLoc = 100;
+    }
+    int ll = 0;
+    for (int ii = startLoc; ii < endLoc; ii++)
+    {
+        if (input[ii] == delim || input[ii] == '\n')
+        {
+            output[ll++] = ii;
+        }
+        else if (input[ii] == '\0')
+        {
+            output[ll++] = ii;
+            break;
+        }
+    }
+}
+void str2long_list(char input[], long output[]){
+    int Start = 0;
+    // int End = 0;
+    int ii = 0;
+    int extra = 0;
+    int commas[100] = {0};
+    // int num;
+    get_separation_locs(input, ',', 0, -1, commas);
+    while (commas[ii] > 0)
+    {
+        char dst[100] = {'\0'};
+        reset_char_arr(dst, 0,100);
+        strcpy_(dst, input, 0, Start, commas[ii]);
+        if (checkCharLoc(dst, '-') >= 0){
+            long expandedList[100] = {-1};
+            reset_long_arr(expandedList, 0,100, -1);
+            int len = expandListLong(dst, expandedList);
+            longcpy_(output, expandedList, ii + extra, 0, len);
+            extra += (len -1);
+            Start = commas[ii] + 1;
+            ii++;
+        }else{
+        int num = combineElements(dst, commas[ii] - Start);
+        output[ii] = num;
+        Start = commas[ii] + 1;
+        ii++;
+        }
+    }
+}
+
+void str2int_list(char input[], int output[]){
+    int Start = 0;
+    // int End = 0;
+    int ii = 0;
+    int extra = 0;
+    int commas[100] = {0};
+    // int num;
+    get_separation_locs(input, ',', 0, -1, commas);
+    while (commas[ii] > 0)
+    {
+        char dst[100] = {'\0'};
+        reset_char_arr(dst, 0,100);
+        strcpy_(dst, input, 0, Start, commas[ii]);
+        if (checkCharLoc(dst, '-') >= 0){
+            int expandedList[100] = {-1};
+            reset_int_arr(expandedList, 0,100, -1);
+            int len = expandList(dst, expandedList);
+            intcpy_(output, expandedList, ii + extra, 0, len);
+            extra += (len -1);
+            Start = commas[ii] + 1;
+            ii++;
+        }else{
+        int num = combineElements(dst, commas[ii] - Start);
+        output[ii] = num;
+        Start = commas[ii] + 1;
+        ii++;
+        }
+    }
+}
 void delimit(char line[], char delim, char* output[]){
     int num_lines = count_char(line, delim)+1;
     int start, end;
@@ -500,25 +516,6 @@ void delimit(char line[], char delim, char* output[]){
         //printf("%s\n", output[l]);
     }
 }
-
-void str_append(char** base, char* to_append){
-    int base_data_len,  to_append_data_len;
-    base_data_len = len_char(*base);
-    to_append_data_len = len_char(to_append);
-    /*combine the data fields*/
-    //char new_str[base_data_len+to_append_data_len+1];
-    char* new_str = calloc(base_data_len+to_append_data_len+1, sizeof(char));
-    //char* new_data = NULL;
-    strcpy_(new_str, *base, 0, 0, base_data_len);
-    strcpy_(new_str, to_append, base_data_len, 0, to_append_data_len);
-#ifdef debug
-    printf("str_append()\n", new_str);
-    printf("\t%s\n", new_str);
-#endif
-    free(*base);
-    *base = new_str;
-}
-
 
 /* END UTILS*/
 void ZQ_print_tree(ZQDecisionTree* tree){
@@ -596,9 +593,17 @@ void ZQ_print_node_info(ZQDecisionTreeNode* node){
 ZQDecisionTree* ZQ_build_tree(char* file_name){
     FILE* data = fopen(file_name, "r");
     int indices[1]  = {0};
-    char** file_data;
     int num_lines;
-    read_(data, indices, &file_data, &num_lines);
+    char temp_int[10];
+    fgets(temp_int, BUFFSIZE, data);
+    fclose(data);
+    
+    num_lines = atoi(temp_int);
+    char* file_data[num_lines];
+    data = fopen(file_name, "r");
+    int dummy;
+    read_(data, indices, file_data, &dummy);
+    
 #ifdef  db_build
     printf("\nZQ_build_tree()\n");
     for (int i = 0; i < num_lines+1; i++){
@@ -606,7 +611,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
     }
     printf("\n");
 #endif
-    char* questions = *(file_data+0);
+    char* questions = file_data[0];
     int num_levels = count_char(questions, '?');
     
     char* qs_list[num_lines];
@@ -617,7 +622,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
 
     for (int i = 0; i < num_lines+1; i++)
         free(*(file_data+ i));
-    free(file_data);
+    //free(file_data);
     
     for (int i = 0; i < num_levels; i++)
         free(*(qs_list+ i));
@@ -667,15 +672,27 @@ ZQDecisionTreeNode* ZQ_build_tree_helper(char** questions,  int curr_lvl, int nu
 
 void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     FILE* data = fopen(file_name, "r");
-    int indices[1]  = {0};
-    char** file_data;
     int num_lines;
-    read_(data, indices, &file_data, &num_lines);
+    char temp_int[10];
+    fgets(temp_int, BUFFSIZE, data);
+    fclose(data);
+    data = fopen(file_name, "r");
+    num_lines = atoi(temp_int);
+    printf("temp_int = %d\n", num_lines);
+    char* file_data[num_lines];
+    
+    int dummy;
+    
+    int indices[1]  = {0};
+    read_(data, indices, file_data, &dummy);
     int num_lvls = count_char(*(file_data+0), '?');
+    printf("num_lvls = %d\n", num_lvls);
+    fflush(stdout);
 #ifdef  db_preproc
     printf("\nZQ_populate_tree()\n");
     for (int i = 0; i < num_lines+1; i++){
         printf("%s\n", *(file_data+i));
+        fflush(stdout);
     }
 #endif
     char* objects[num_lines]; char* answers_temp[num_lines];
@@ -704,14 +721,13 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
         free(*(answers_temp+ i));
     for (int i = 0; i < num_lines+1; i++)
         free(*(file_data+ i));
-    free(file_data);
+    //free(file_data);
 /*
  This takes a previously-built tree and a char* with the name of the data file.
  The function populates the tree with the answers within the correct leaf nodes based on the data
  from the file, following the correct yes/no paths through the tree.
  */
 }
-
 
 void ZQ_populate_tree_helper(ZQDecisionTreeNode* curr, char* field, int* map, int curr_lvl, int num_lvls){
     int idx;
@@ -858,7 +874,7 @@ char* read_line(char* curr_buff, char** prev_buff, char* line, int* num_buffs){
 /* this function stores the info contained in a file in a variable, file_data
  the first line must contain the number of lines in the file
  file_data,then   stores all lines except the first */
-void read_(FILE* data , int indices[], char*** file_data, int* num_lines){
+void read_(FILE* data , int indices[], char* file_data[], int* num_lines){
     /*
      indices: the lines that are to be treated as special
      */
@@ -889,8 +905,11 @@ void read_(FILE* data , int indices[], char*** file_data, int* num_lines){
                     char temp_[BUFFSIZE*num_buffs]; memset(temp_, '\0', BUFFSIZE*num_buffs);
                     strcpy_(temp_, curr_data, 0, 0, BUFFSIZE*num_buffs);
                     line = read_line(temp_, &prev_data, line, &num_buffs);
-                    *(*file_data+ data_i) = calloc(1+len_char(line), sizeof(char));
-                    strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+                    
+                    //*(*file_data+ data_i) = calloc(1+len_char(line), sizeof(char));
+                    //strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+                    file_data[data_i] = calloc(1+len_char(line), sizeof(char));
+                    strcpy_(file_data[data_i], line, 0, 0, len_char(line));
 //    #ifdef debug
 //                    printf("file_data[%d]:", data_i);
 //                    printf("%s\n", *(*file_data+ data_i));
@@ -906,10 +925,14 @@ void read_(FILE* data , int indices[], char*** file_data, int* num_lines){
             }//end l < num_lines - 1
             else{
                 line = read_line(curr_data, &prev_data, line, &num_buffs);
-                *(*file_data+ data_i) = calloc(1+ len_char(line), sizeof(char));
-                strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+                //*(*file_data+ data_i) = calloc(1+ len_char(line), sizeof(char));
+                //strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+                file_data[data_i] = calloc(1+ len_char(line), sizeof(char));
+                strcpy_(file_data[data_i], line, 0, 0, len_char(line));
+//    #ifdef debug
+                
 #ifdef db_preproc
-                printf("%s\n", *(*file_data+ data_i));
+                printf("%s\n", file_data[data_i]);
 #endif
                 }//end NOT(data_i == num_lines -1)
             }//end l ≠ 0
@@ -921,4 +944,5 @@ void read_(FILE* data , int indices[], char*** file_data, int* num_lines){
     free(prev_data);
     free(line);
 }
+
 
