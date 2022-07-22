@@ -620,12 +620,14 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
     tree->root = ZQ_build_tree_helper(qs_list, 0,  num_levels, num_lines);
  /* ***************************  CLEANUP ******************************************* */
 
-    for (int i = 0; i < num_lines+1; i++)
+    for (int i = 0; i < num_lines+1; i++){
         free(*(file_data+ i));
+		}
     //free(file_data);
     
-    for (int i = 0; i < num_levels; i++)
+    for (int i = 0; i < num_levels; i++){
         free(*(qs_list+ i));
+	}
 /*
  inputs: a char* which represents the name of the file to load the data from.
  returns: a ZQDecisionTree that has been populated with all of the questions.
@@ -680,7 +682,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     data = fopen(file_name, "r");
     num_lines = atoi(temp_int);
     printf("temp_int = %d\n", num_lines);
-    char* file_data[num_lines];
+    char* file_data[num_lines+1];
     
     int dummy;
     
@@ -889,7 +891,7 @@ void read_(FILE* data , int indices[], char* file_data[], int* num_lines){
         data_i = l-1;
         if (l == indices[0]){ //number of qs
             *num_lines = atoi(curr_data);
-            *file_data = calloc(1 + *num_lines, sizeof(char*));
+           // file_data = calloc(1 + *num_lines, sizeof(char*));
             l++;
             num_buffs = 1; //rst  num_buffs for next code block;
             continue;
