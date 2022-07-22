@@ -507,16 +507,12 @@ int count_num_lines(char* path, int buff_size){
     fclose(data);
     return num_lines+1;
 }
-char* read_line(char* path, int buff_size, char* out_line){
-    char x;
-    return &x;
-}
 
 
 char** read_(char* path, int buff_size){
     int num_lines = count_num_lines(path, buff_size);
     char** out = malloc(sizeof(char*)* num_lines);
-    for (int i = 0; i < num_lines; i++)
+    for (int i = 0; i < num_lines+1; i++)
         out[i] = NULL;
     FILE* in = fopen(path, "r");
     char curr_data[buff_size];
@@ -561,4 +557,10 @@ char** read_(char* path, int buff_size){
 }
 
 
-void free_string_arr(char** ll);
+void free_string_arr(char** ll ){ //take a reference to a list of strings
+    int i = 0;
+    while (ll[i]!=NULL){
+        free(ll[i]);
+    }
+    free(ll);
+}
