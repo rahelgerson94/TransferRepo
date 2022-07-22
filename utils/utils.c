@@ -1,4 +1,5 @@
 #include "utils.h"
+#define debug
 int len_int(int arr[]){
     int i = 0;
     int len = 0;
@@ -209,7 +210,7 @@ void str2int_list(char input[], int output[]){
     int extra = 0;
     int commas[100] = {0};
     // int num;
-    get_separation_locs(input, 'c', 0, -1, commas);
+    get_separation_locs(input, ',', 0, -1, commas);
     while (commas[ii] > 0)
     {
         char dst[100] = {'\0'};
@@ -326,14 +327,7 @@ int combineElements(char arr[], int cc){
     return out;
 }
 
-void get_separation_locs(char input[], char delim_type, int startLoc, int endLoc, int output[]){
-    char delim;
-    if (delim_type == 'c'){
-        delim = ',';
-    }
-    else if (delim_type == '\n'){
-        delim = '\n';
-    }
+void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int output[]){
     if (endLoc == -1)
     {
         endLoc = 100;
@@ -453,13 +447,11 @@ void print_spaces(int num_spaces){
         printf(" ");
     }
 }
-
 void delimit(char line[], char delim, char* output[]){
     int num_lines = count_char(line, delim)+1;
     int start, end;
     
-    int delim_locs[num_lines];
-    reset_int_arr(delim_locs, 0, num_lines, -1);
+    int delim_locs[num_lines];reset_int_arr(delim_locs, 0, num_lines, -1);
     get_separation_locs(line, delim, 0, strlen(line), delim_locs);
     
     start = 0;
@@ -504,3 +496,63 @@ void str_append(char** base, char* to_append){
     *base = new_str;
 }
 
+/* count the number of lines in a file */
+int num_lines(char* path, int buff_size){
+    FILE* data = fopen(path, "r");
+    char curr_data[buff_size];
+    int num_lines = 0;
+    while(fgets(curr_data, buff_size, data) != NULL){
+        num_lines+=count_char(curr_data);
+    }
+    fclose(data);
+    return num_lines;
+}
+/*this function reads a single line of input from a file */
+ char* read_line(char* path, int buff_size, char* out_line){
+    free(line);
+    line =  calloc(BUFFSIZE*(*num_buffs)+1, sizeof(char));
+    //strcpy_(line, *prev_buff, 0, 0, BUFFSIZE*(*num_buffs));
+    strcpy(line, *prev_buff);
+    strcat(line, curr_buff);
+    free(*prev_buff);
+    *prev_buff = calloc(BUFFSIZE*(*num_buffs), sizeof(char));
+    strcpy(*prev_buff, line);
+    (*num_buffs)++;
+    return line;
+}
+/* return the number of times search appears in input*/
+int count_char(char input[], char search){
+    int ind = 0;
+    int count = 0;
+    while(input[ind] != '\0'){
+        if(input[ind] == search){
+            count++;
+        }
+        ind++;
+    }
+    return count;
+}
+void read_(char* path, int buff_size){
+    FILE* data = fopen(path, "r");
+    while(fgets(curr_data, buff_size, data) != NULL){
+        if ((count_char(curr_data, '\n' ) <= 0 ) { //check  if its the end of the line
+            
+        }//end check of EOL
+    }//while
+    fclose(data);
+}//end read_
+
+void free_string_arr(){
+}
+
+
+int num_lines(char* path, int buff_size){
+    FILE* data = fopen(path, "r");
+    char curr_data[buff_size];
+    int num_lines = 0;
+    while(fgets(curr_data, buff_size, data) != NULL){
+        num_lines+=count_char(curr_data);
+    }
+    fclose(data);
+    return num_lines;
+}

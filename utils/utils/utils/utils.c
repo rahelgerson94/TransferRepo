@@ -1,4 +1,5 @@
 #include "utils.h"
+#define debug
 int len_int(int arr[]){
     int i = 0;
     int len = 0;
@@ -209,7 +210,7 @@ void str2int_list(char input[], int output[]){
     int extra = 0;
     int commas[100] = {0};
     // int num;
-    get_separation_locs(input, 'c', 0, -1, commas);
+    get_separation_locs(input, ',', 0, -1, commas);
     while (commas[ii] > 0)
     {
         char dst[100] = {'\0'};
@@ -326,14 +327,7 @@ int combineElements(char arr[], int cc){
     return out;
 }
 
-void get_separation_locs(char input[], char delim_type, int startLoc, int endLoc, int output[]){
-    char delim;
-    if (delim_type == 'c'){
-        delim = ',';
-    }
-    else if (delim_type == '\n'){
-        delim = '\n';
-    }
+void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int output[]){
     if (endLoc == -1)
     {
         endLoc = 100;
@@ -453,13 +447,11 @@ void print_spaces(int num_spaces){
         printf(" ");
     }
 }
-
 void delimit(char line[], char delim, char* output[]){
     int num_lines = count_char(line, delim)+1;
     int start, end;
     
-    int delim_locs[num_lines];
-    reset_int_arr(delim_locs, 0, num_lines, -1);
+    int delim_locs[num_lines];reset_int_arr(delim_locs, 0, num_lines, -1);
     get_separation_locs(line, delim, 0, strlen(line), delim_locs);
     
     start = 0;
@@ -504,3 +496,69 @@ void str_append(char** base, char* to_append){
     *base = new_str;
 }
 
+/* count the number of lines in a file */
+int count_num_lines(char* path, int buff_size){
+    FILE* data = fopen(path, "r");
+    char curr_data[buff_size];
+    int num_lines = 0;
+    while(fgets(curr_data, buff_size, data) != NULL){
+        num_lines+=count_char(curr_data, '\n');
+    }
+    fclose(data);
+    return num_lines+1;
+}
+char* read_line(char* path, int buff_size, char* out_line){
+    char x;
+    return &x;
+}
+
+
+char** read_(char* path, int buff_size){
+    int num_lines = count_num_lines(path, buff_size);
+    char** out = malloc(sizeof(char*)* num_lines);
+    for (int i = 0; i < num_lines; i++)
+        out[i] = NULL;
+    FILE* in = fopen(path, "r");
+    char curr_data[buff_size];
+    int l = 0;
+    int num_buffs = 1;
+    
+    while(fgets(curr_data, buff_size, in) != NULL){
+        if (out[l] == NULL){
+            out[l] = calloc(sizeof(char), buff_size);
+            strcpy(out[l], curr_data);
+        }
+        else{
+            int len = (buff_size)*(num_buffs);
+            char temp[len];
+            reset_char_arr(temp, 0, len);
+            strcpy(temp, out[l]); //temp = out[l]
+            out[l] = realloc(out[l], len);
+            reset_char_arr(out[l], 0, len);
+            strcpy(out[l], temp); //temp = out[l]
+            
+            if (count_char(curr_data, '\n') > 0){
+                //printf("curr_data:>%s<\n", curr_data);
+                int new_line_loc =  checkCharLoc(curr_data, '\n');
+                curr_data[new_line_loc] = '\0';
+                
+                strncat(out[l], curr_data, buff_size*(num_buffs));
+                printf("%d. %s\n", l, out[l]);
+                //printf("%s\n", out[l]);
+                num_buffs = 1;
+                l++;
+            }
+            else{
+                strncat(out[l], curr_data, buff_size);
+                printf("%d. %s\n", l, out[l]);
+                num_buffs = num_buffs+1;
+            }
+        }
+        
+    }
+    fclose(in);
+    return out;
+}
+
+
+void free_string_arr(char** ll);
