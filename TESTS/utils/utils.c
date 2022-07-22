@@ -380,3 +380,127 @@ int find_substr(char input[], char search[], int ind){
     }
     return -1;
 }
+/* return the number of times search appears in input*/
+int count_char(char input[], char search){
+    int ind = 0;
+    int count = 0;
+    while(input[ind] != '\0'){
+        if(input[ind] == search){
+            count++;
+        }
+        ind++;
+    }
+    return count;
+}
+
+int count_substr(char base[], char to_search[]){
+    /*
+    count how many times to_search appears within base.
+    return 0 if no match is found.
+     */
+//#ifdef debug
+//    printf("count()\n");
+//#endif
+    
+    int count = 0;
+    int bi = 0;
+    while (base[bi] != '\0'){
+        bi = find_substr(base, to_search, bi);
+        if  (bi==-1) return count;
+//#ifdef debug
+//        printf("\tbi=%d\n", bi);
+//#endif
+        if (bi != -1) {
+            count++;
+            bi++;
+        }
+    }return count;
+}
+
+
+
+//int         (char input[], char search[], int ind){
+int index_(char base[], char to_search[]){
+    /* return the index in base where search appears
+     ex: if base = blafishes, to_search = fis,
+     out should be 3
+     */
+    int ind = 0;
+    int ll = 0; //iterator for the search term
+    int out = ind;
+    bool first_match = true;
+    
+    while(base[ind] != '\0'){
+        if(base[ind] == to_search[ll]){
+            if (first_match) {
+                out = ind;
+                first_match = false;
+            }
+            ll++;
+            if (to_search[ll] == '\0')
+                return  out;
+        }
+        else{
+            first_match = true;
+            ll=0;
+        }
+        ind++;
+    }
+    return -1;
+}
+void print_spaces(int num_spaces){
+    for (int i = 0; i < num_spaces; i++){
+        printf(" ");
+    }
+}
+
+void delimit(char line[], char delim, char* output[]){
+    int num_lines = count_char(line, delim)+1;
+    int start, end;
+    
+    int delim_locs[num_lines];
+    reset_int_arr(delim_locs, 0, num_lines, -1);
+    get_separation_locs(line, delim, 0, strlen(line), delim_locs);
+    
+    start = 0;
+    end = delim_locs[0];
+    int curr_size = end - start + 1; //includes space for null char
+    output[0] = calloc(curr_size, sizeof(char));
+    strcpy_(output[0], line, 0, start, end );
+    printf("%s\n", output[0]);
+    
+    for (int l = 1; l < num_lines; l++){
+        if (l == num_lines-1){
+            start = delim_locs[l-1]+1;
+            end = strlen(line);
+        }
+        else{
+            end = delim_locs[l];
+            start = delim_locs[l-1]+1;
+        }
+        curr_size = end - start + 1;
+        output[l] = calloc(curr_size, sizeof(char));
+        strcpy_(output[l], line, 0, start, end);
+        //printf("%s\n", output[l]);
+    }
+}
+
+void str_append(char** base, char* to_append){
+    int base_data_len,  to_append_data_len;
+    int base_tot, to_append_tot;
+    base_data_len = len_char(*base);
+    to_append_data_len = len_char(to_append);
+    /*combine the data fields*/
+    //char new_str[base_data_len+to_append_data_len+1];
+    char* new_str = calloc(base_data_len+to_append_data_len+1, sizeof(char));
+    //char* new_data = NULL;
+    strcpy_(new_str, *base, 0, 0, base_data_len);
+    strcpy_(new_str, to_append, base_data_len, 0, to_append_data_len);
+#ifdef debug
+    printf("str_append()\n", new_str);
+    printf("\t%s\n", new_str);
+#endif
+    free(*base);
+    *base = new_str;
+}
+
