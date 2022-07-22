@@ -53,7 +53,7 @@ int count_num_lines(char* path, int buff_size){
 
 char** read_(char* path, int buff_size){
 int num_lines = count_num_lines(path, buff_size);    
-char** out = malloc(sizeof(char*)* num_lines);
+char** out = malloc(sizeof(char*)* num_lines+1);
     for (int i = 0; i < num_lines+1; i++)
         out[i] = NULL;
     FILE* in = fopen(path, "r");
