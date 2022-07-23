@@ -602,11 +602,12 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
     read_( file_name, buff_size, file_data);
     
 #ifdef  db_build
-    printf("\nZQ_build_tree()\n");
+    printf("\nZQ_build_tree()\n"); fflush(stdout);
     for (int i = 0; i < num_lines+1; i++){
-        printf("%s\n", *(file_data+i));
+        printf("%s\n", *(file_data+i)); fflush(stdout);
     }
-    printf("\n");
+    printf("ZQ_build_tree(): about to call delimit() \n"); fflush(stdout);
+    
 #endif
     char* questions = file_data[1];
     int num_levels = count_char(questions, '?');
@@ -615,18 +616,20 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
     delimit(questions, ',', qs_list);
     ZQDecisionTree* tree = malloc(sizeof(tree));
 #ifdef db_build
-    printf("output of delimit()\n");fflush(stdout);
+    printf("ZQ_build_tree(): output of delimit()\n");
+    fflush(stdout);
     for (int i = 0; i < num_levels; i++){
-	printf("%s\n", qs_list[i]);fflush(stdout);
+	printf("%s\n", qs_list[i]);
+    fflush(stdout);
     }
-    printf("about to call build_tree_helper()\n");
+    printf("ZQ_build_tree(): about to call build_tree_helper()\n");
     fflush(stdout);
 #endif
     
     tree->root = ZQ_build_tree_helper(qs_list, 0,  num_levels, num_lines);
  /* ***************************  CLEANUP ******************************************* */
 #ifdef db_build
-    printf("about to free file_data and qs_list\n");
+    printf("ZQ_build_tree(): about to free file_data and qs_list\n");
     fflush(stdout);
     for (int i = 0; i < num_lines+1; i++){
     	printf("\t%s\n", *(file_data+ i)); fflush(stdout); //debug
