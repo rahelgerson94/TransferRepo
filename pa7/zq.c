@@ -3,7 +3,7 @@
 //#define db_pop
 //#define db_pop2
 //#define db_print
-#define BUFFSIZE 10
+#define BUFFSIZE 3
 #include "zq.h"
 //#define db_free
 
@@ -519,9 +519,9 @@ void ZQ_print_tree_helper(ZQDecisionTreeNode* cur, int level){
     /* print out a text representation of a decision tree. */
     //print_spaces(level);
     if (cur->num_answers >= 0){ //we are at answers.
-        printf(" | ");
+        //printf(" | ");
         for (int i = 0; i < cur->num_answers; i++)
-            printf(" %s |",cur->answers[i]);
+            printf("%s |",cur->answers[i]);
         printf("\n");
     return;
     } //end if cur->num_answers >= 0
@@ -719,7 +719,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     
     
     int num_lvls = count_char(*(file_data+1), '?');
-    
+    int line_len = get_max_line_len(file_name);
 #ifdef  db_preproc
     printf("\nZQ_populate_tree()\n");
     fflush(stdout);
@@ -729,7 +729,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     }
 #endif
     char* objects[num_objs]; char* answers_temp[num_objs];
-    process(file_data, ',', num_objs, objects, answers_temp); //populate the answers and objects fields
+    process(file_data, ',', num_objs, line_len+1, objects, answers_temp); //populate the answers and objects fields
    
 #ifdef  db_preproc
     printf("\nZQ_populate_tree(): output of process()\n");
@@ -851,10 +851,10 @@ void ZQ_free_tree_helper(ZQDecisionTreeNode* cur, int lvl){
  the data before the first occurence of delim will be in col1, and all data after that first delim
  will be in col2.
  col1 and col2 are outparams */
-void process(char** data, char delim, int num_lines, char* col1[], char* col2[]){
+void process(char** data, char delim, int num_lines, int line_len, char* col1[], char* col2[]){
     //int num_qs = count(*data, "?");
-    int num_qs = count_char(data[1], '?');
-    int col2_elems = (num_qs*2) - 1; //col2 elems are always 1 digit, and look like 0,1,... and we know how many 0's and 1s there are (there are num_qs of them)
+    //int num_qs = count_char(data[1], '?');
+    int col2_elems = line_len; //col2 elems are always 1 digit, and look like 0,1,... and we know how many 0's and 1s there are (there are num_qs of them)
     
     /* allocate  space for col2*/
     for (int l = 0; l < num_lines; l ++){
@@ -870,7 +870,7 @@ void process(char** data, char delim, int num_lines, char* col1[], char* col2[])
 #endif
     //populate col1, col2
     for (int l = 0; l < num_lines; l++){
-        int col1_elems = len_char(*(data+l+2))-col2_elems;
+        int col1_elems = line_len;
         col1[l] = calloc(col1_elems, sizeof(char));
         parse_line(*(data+l+2), ',', &(col1[l]), &(col2[l]));
 #ifdef  db_build
