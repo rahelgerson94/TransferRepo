@@ -4,6 +4,20 @@
 #include <stdbool.h>
 #include <string.h>
 
+int len_char(char arr[]){
+    int i = 0;
+    int len = 0;
+    while (arr[i] != '\0'){
+        if (arr[i] == '\n')
+            break;
+        else{
+            len++;
+        }
+        i++;
+    }
+    return len;
+}
+
 void reset_char_arr(char arr[], int start, int end){
     for (int i = start; i < end; i++)
     {
@@ -54,13 +68,14 @@ int count_num_lines(char* path, int buff_size){
 char** read_(char* path, int buff_size){
 int num_lines = count_num_lines(path, buff_size);    
 char** out = malloc(sizeof(char*)* (num_lines+1));
-    for (int i = 0; i < num_lines+1; i++)
-        printf("out[%d]", i);  //db
+    for (int i = 0; i < num_lines+1; i++){
+        printf("\tout[%d]\n", i);  //db
         out[i] = NULL;
+    }
     FILE* in = fopen(path, "r");
     char curr_data[buff_size];
     int l = 0;
-    int num_buffs = 1;
+    int len_new = buff_size;
     int iter0 = 0; //db
     while(fgets(curr_data, buff_size, in) != NULL){
         if (out[l] == NULL){
@@ -68,33 +83,36 @@ char** out = malloc(sizeof(char*)* (num_lines+1));
             strcpy(out[l], curr_data);
         }
         else{
-            int len = (buff_size)*(num_buffs);
-            char temp[len];
-            reset_char_arr(temp, 0, len);
+            int len_new = len_new + len_char(curr_data) + 1;
+            char temp[len_new];
+            reset_char_arr(temp, 0, len_new);
             strcpy(temp, out[l]); //temp = out[l]
-            printf("\t%d. realloc( ) ", iter0);  //db
-            out[l] = realloc(out[l], len);
-            reset_char_arr(out[l], 0, len);
+            
+            printf("\t%d. realloc(), l = %d \n", iter0, l);  //db
+            out[l] = realloc(out[l], len_new);
+            reset_char_arr(out[l], 0, len_new);
             strcpy(out[l], temp); //temp = out[l]
             
             if (count_char(curr_data, '\n') > 0){
                 //printf("curr_data:>%s<\n", curr_data);
                 int new_line_loc =  checkCharLoc(curr_data, '\n');
                 curr_data[new_line_loc] = '\0';
+                printf("before strcat: out[%d] = >%s< \n", l, out[l]);
                 
-                strncat(out[l], curr_data, buff_size*(num_buffs));
+                strncat(out[l], curr_data, len_new+1);
+                printf("after strcat: out[%d] = >%s< \n", l, out[l]);
+                printf("len: %d", len);
                 //printf("%d. %s\n", l, out[l]);
                 //printf("%s\n", out[l]);
                 num_buffs = 1;
                 l++;
             }
             else{
-                strncat(out[l], curr_data, buff_size);
+                strncat(out[l], curr_data, len_char(out[l]) + 1);
                 //printf("%d. %s\n", l, out[l]);
-                num_buffs = num_buffs+1;
             }
         }
-        
+        iter0++;
     }
     fclose(in);
     return out;

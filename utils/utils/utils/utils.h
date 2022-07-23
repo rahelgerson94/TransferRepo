@@ -24,7 +24,7 @@ bool is_char(char c);
 bool is_digit(char c);
 int char2num(char Input);
 void print_int_arr(int arr[]);
-
+void print_int_ptr_arr(int* arr[], int length);
 void intcpy_(int dst[], int src[], int out_start, int in_start, int in_end);
 void floatcpy_(float dst[], float src[], int out_start, int in_start, int in_end);
 void doublecpy_(double dst[], double src[], int out_start, int in_start, int in_end);
@@ -47,7 +47,10 @@ void str_append(char** base, char* to_append);
 void print_spaces(int num_spaces);
 /* file IO helper funcs */
 int count_num_lines(char* path, int buff_size);
-char* read_line(char* path, int buff_size, char* out_line);
-char** read_(char* path, int buff_size);
-void free_string_arr(char** ll);
+int get_max_line_len(char* path);
+//char* read_line(char* path, int buff_size, char* out_line);
+int* line_lengths(char* path, int buff_size);
+//char** read_(char* path, int buff_size);
+void read_(char* path, int buff_size, char* arr[]);
+void free_string_arr(char **ll[]);
 #endif /* utils_h */
