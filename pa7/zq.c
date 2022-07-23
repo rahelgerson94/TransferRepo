@@ -587,7 +587,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
  During this process, the answers should not be added to the tree, just the question structure and
  leaf nodes with no questions or answers are added to the tree. Every level of this
  totally-full tree should have the same question.*/
-    FILE* data = fopen(file_name, "r");
+    //FILE* data = fopen(file_name, "r");
     int buff_size = 100;
     
     
