@@ -117,7 +117,6 @@ int count_num_lines(char* path, int buff_size){
 //    return out;
 //}
 
-
 int get_max_line_len(char* path){
     /* length excludes newline char */
     FILE* data = fopen(path, "r");

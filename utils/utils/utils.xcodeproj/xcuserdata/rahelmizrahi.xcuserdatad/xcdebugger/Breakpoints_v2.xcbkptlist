@@ -96,7 +96,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "600"
             endingLineNumber = "600"
-            landmarkName = "free_string_arr(arr)"
+            landmarkName = "line_lengths(path, buff_size)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
