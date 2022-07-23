@@ -64,6 +64,13 @@ int index_(char base[], char to_search[]);
 void delimit(char line[], char delim, char* output[]);
 void str_append(char** base, char* to_append);
 void print_spaces(int num_spaces);
+/* file IO helper funcs */
+int count_num_lines(char* path, int buff_size);
+int get_max_line_len(char* path);
+//char* read_line(char* path, int buff_size, char* out_line);
+int* line_lengths(char* path, int buff_size);
+//char** read_(char* path, int buff_size);
+void read_(char* path, int buff_size, char* arr[]);
 
 /* END UTILS*/
 

@@ -64,60 +64,58 @@ int count_num_lines(char* path, int buff_size){
     return num_lines+1;
 }
 
-
-
-char** read_(char* path, int buff_size){
-int num_lines = count_num_lines(path, buff_size);    
-char** out = malloc(sizeof(char*)* (num_lines+1));
-    for (int i = 0; i < num_lines+1; i++){
-        printf("\tout[%d]\n", i);  //db
-        out[i] = NULL;
-    }
-    FILE* in = fopen(path, "r");
-    char curr_data[buff_size];
-    int l = 0;
-    int len_new = buff_size;
-    int iter0 = 0; //db
-    while(fgets(curr_data, buff_size, in) != NULL){
-        if (out[l] == NULL){
-            out[l] = calloc(sizeof(char), buff_size);
-            strcpy(out[l], curr_data);
-        }
-        else{
-            int len_new = len_new + len_char(curr_data) + 1;
-            char temp[len_new];
-            reset_char_arr(temp, 0, len_new);
-            strcpy(temp, out[l]); //temp = out[l]
-            
-            printf("\t%d. realloc(), l = %d \n", iter0, l);  //db
-            out[l] = realloc(out[l], len_new);
-            reset_char_arr(out[l], 0, len_new);
-            strcpy(out[l], temp); //temp = out[l]
-            
-            if (count_char(curr_data, '\n') > 0){
-                //printf("curr_data:>%s<\n", curr_data);
-                int new_line_loc =  checkCharLoc(curr_data, '\n');
-                curr_data[new_line_loc] = '\0';
-                printf("before strcat: out[%d] = >%s< \n", l, out[l]);
-                
-                strncat(out[l], curr_data, len_new+1);
-                printf("after strcat: out[%d] = >%s< \n", l, out[l]);
-                printf("len: %d", len);
-                //printf("%d. %s\n", l, out[l]);
-                //printf("%s\n", out[l]);
-                num_buffs = 1;
-                l++;
-            }
-            else{
-                strncat(out[l], curr_data, len_char(out[l]) + 1);
-                //printf("%d. %s\n", l, out[l]);
-            }
-        }
-        iter0++;
-    }
-    fclose(in);
-    return out;
-}
+//char** read_(char* path, int buff_size){
+//int num_lines = count_num_lines(path, buff_size);
+//char** out = malloc(sizeof(char*)* (num_lines+1));
+//    for (int i = 0; i < num_lines+1; i++){
+//        printf("\tout[%d]\n", i);  //db
+//        out[i] = NULL;
+//    }
+//    FILE* in = fopen(path, "r");
+//    char curr_data[buff_size];
+//    int l = 0;
+//    int len_new = buff_size;
+//    int iter0 = 0; //db
+//    while(fgets(curr_data, buff_size, in) != NULL){
+//        if (out[l] == NULL){
+//            out[l] = calloc(sizeof(char), buff_size);
+//            strcpy(out[l], curr_data);
+//        }
+//        else{
+//            int len_new = len_new + len_char(curr_data) + 1;
+//            char temp[len_new];
+//            reset_char_arr(temp, 0, len_new);
+//            strcpy(temp, out[l]); //temp = out[l]
+//
+//            printf("\t%d. realloc(), l = %d \n", iter0, l);  //db
+//            out[l] = realloc(out[l], len_new);
+//            reset_char_arr(out[l], 0, len_new);
+//            strcpy(out[l], temp); //temp = out[l]
+//
+//            if (count_char(curr_data, '\n') > 0){
+//                //printf("curr_data:>%s<\n", curr_data);
+//                int new_line_loc =  checkCharLoc(curr_data, '\n');
+//                curr_data[new_line_loc] = '\0';
+//                printf("before strcat: out[%d] = >%s< \n", l, out[l]);
+//
+//                strncat(out[l], curr_data, len_new+1);
+//                printf("after strcat: out[%d] = >%s< \n", l, out[l]);
+//                printf("len: %d", len);
+//                //printf("%d. %s\n", l, out[l]);
+//                //printf("%s\n", out[l]);
+//                num_buffs = 1;
+//                l++;
+//            }
+//            else{
+//                strncat(out[l], curr_data, len_char(out[l]) + 1);
+//                //printf("%d. %s\n", l, out[l]);
+//            }
+//        }
+//        iter0++;
+//    }
+//    fclose(in);
+//    return out;
+//}
 
 
 int get_max_line_len(char* path){
@@ -142,6 +140,34 @@ int get_max_line_len(char* path){
 //    printf(">");
     return max_num_char;
     
+}
+void read_(char* path, int buff_size, char* arr[]){
+    /* populate arr w/ contents of file_data.
+     arr is an out param */
+    int num_lines = count_num_lines(path, buff_size);
+    int max_len = get_max_line_len(path);
+    int cur_len;
+    FILE* in = fopen(path, "r");
+    char curr_in[max_len+1];
+    reset_char_arr(curr_in, 0, max_len);
+    int i = 0;
+    while(fgets(curr_in, max_len+1, in)){ //+1 for new line
+        cur_len = len_char(curr_in);
+        curr_in[cur_len] = '\0';
+        printf("%d\t", cur_len);
+        if (cur_len == 0)
+            continue;
+        else{
+            arr[i] = malloc(sizeof(char)*(cur_len+1)); //+1 for null char,
+            strcpy(arr[i], curr_in);
+            arr[i][cur_len]  = '\0';
+            printf(">%s<\n", arr[i]);
+            reset_char_arr(curr_in, 0, max_len);
+            i++;
+        }
+        
+    }
+    fclose(in);
 }
 
 int main(int argc, const char * argv[]) {

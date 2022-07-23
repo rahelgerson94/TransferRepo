@@ -635,7 +635,8 @@ int* line_lengths(char* path, int buff_size){
 }
 
 int get_max_line_len(char* path){
-    /* length excludes newline char */
+    /* returns the length of the longest line in a file
+     length excludes newline char */
     FILE* data = fopen(path, "r");
     char curr_data[2];
     int num_lines = 0;
@@ -655,7 +656,6 @@ int get_max_line_len(char* path){
     fclose(data);
 //    printf(">");
     return max_num_char;
-    
 }
 
 //char** read_(char* path, int buff_size){
@@ -681,7 +681,8 @@ int get_max_line_len(char* path){
 void read_(char* path, int buff_size, char* arr[]){
     /* populate arr w/ contents of file_data.
      arr is an out param */
-    int num_lines = count_num_lines(path, buff_size);
+    
+    //int num_lines = count_num_lines(path, buff_size);
     int max_len = get_max_line_len(path);
     int cur_len;
     FILE* in = fopen(path, "r");
@@ -691,14 +692,14 @@ void read_(char* path, int buff_size, char* arr[]){
     while(fgets(curr_in, max_len+1, in)){ //+1 for new line
         cur_len = len_char(curr_in);
         curr_in[cur_len] = '\0';
-        printf("%d\t", cur_len);
+        //printf("%d\t", cur_len);
         if (cur_len == 0)
             continue;
         else{
             arr[i] = malloc(sizeof(char)*(cur_len+1)); //+1 for null char,
             strcpy(arr[i], curr_in);
             arr[i][cur_len]  = '\0';
-            printf(">%s<\n", arr[i]);
+            //printf(">%s<\n", arr[i]);
             reset_char_arr(curr_in, 0, max_len);
             i++;
         }
