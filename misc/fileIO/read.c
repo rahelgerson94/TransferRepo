@@ -65,6 +65,7 @@ int count_num_lines(char* path, int buff_size){
 }
 
 
+
 char** read_(char* path, int buff_size){
 int num_lines = count_num_lines(path, buff_size);    
 char** out = malloc(sizeof(char*)* (num_lines+1));
@@ -119,19 +120,44 @@ char** out = malloc(sizeof(char*)* (num_lines+1));
 }
 
 
-void free_string_arr(char** ll ){ //take a reference to a list of strings
-    int i = 0;
-    while (ll[i]!=NULL){
-        free(ll[i]);
+int get_max_line_len(char* path){
+    /* length excludes newline char */
+    FILE* data = fopen(path, "r");
+    char curr_data[2];
+    int num_lines = 0;
+    int max_num_char = 0;
+    int curr_num_char = 0;
+//    printf("<\n");
+    while(fgets(curr_data, 2, data) != NULL){
+//        printf(">%s<\n",curr_data);
+        if (strcmp(curr_data,"\n") == 0 || strcmp(curr_data,"\0") == 0){
+            num_lines++;
+            if (curr_num_char > max_num_char) max_num_char = curr_num_char;
+            curr_num_char = 0;
+        }else{
+            curr_num_char++;
+        }
     }
-    free(ll);
+    fclose(data);
+//    printf(">");
+    return max_num_char;
+    
 }
 
 int main(int argc, const char * argv[]) {
+    //char path[200] = "/Users/rahelmizrahi/Library/Mobile_Documents/com~apple~CloudDocs/csc352/cs352_pas/pa5/data.txt";
     char path[300] ;
+    int buff_size = 10;
     strcpy(path, argv[1]);
-    int num_lines = count_num_lines(path, 3);
-    char** data = read_(path, 3);
-    free(data);
+    int num_lines = count_num_lines(path, buff_size);
+    char* file_data[num_lines];
+    read_( path, buff_size, file_data);
+    for (int i = 0; i < num_lines; i++){
+        printf("%d. >%s<\n", i, file_data[i]);
+    }
+    
+    for (int i = 0; i < num_lines; i++)
+        free(file_data[i]);
     return 0;
 }
+
