@@ -278,7 +278,7 @@ int index_(char base[], char to_search[]){
 }
 void print_spaces(int num_spaces){
     for (int i = 0; i < num_spaces; i++){
-        printf(" ");
+        printf("    ");
     }
 }
 
@@ -520,16 +520,22 @@ void ZQ_print_tree_helper(ZQDecisionTreeNode* cur, int level){
     //print_spaces(level);
     if (cur->num_answers >= 0){ //we are at answers.
         //printf(" | ");
-        for (int i = 0; i < cur->num_answers; i++)
-            printf("%s |",cur->answers[i]);
+        for (int i = 0; i < cur->num_answers; i++){
+            if (i == 0)
+                printf("| %s | ",cur->answers[i]);
+            else{
+                printf("%s | ",cur->answers[i]);
+            }
+            //printf("$");
+        }
         printf("\n");
     return;
     } //end if cur->num_answers >= 0
     else{
         printf("[%s]\n", cur->text);
-        print_spaces(level); printf("-y->");
+        print_spaces(level);  printf("-y-> ");
         ZQ_print_tree_helper(cur->yes, level+1);
-        print_spaces(level); printf("-n->");
+        print_spaces(level);printf("-n-> ");
         ZQ_print_tree_helper(cur->no, level+1);
     return;
     }
