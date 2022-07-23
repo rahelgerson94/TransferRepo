@@ -787,14 +787,14 @@ void ZQ_populate_tree_helper(ZQDecisionTreeNode* curr, char* field, int* map, in
             case 1:
                 idx = curr->yes->num_answers;
                 //curr->yes->answers = realloc(curr->yes->answers, sizeof(char*)*(idx+1)); //add a new elem to list
-                curr->yes->answers[idx] = calloc(sizeof(field)+1, 1);
+                curr->yes->answers[idx] = calloc(strlen(field)+1, sizeof(char));
                 strcpy(curr->yes->answers[idx], field);
                 
                 curr->yes->num_answers++;
             break;
             case 0:
                 idx = curr->no->num_answers;
-                curr->no->answers[idx] = calloc(sizeof(field)+1, 1);
+                curr->no->answers[idx] = calloc(strlen(field)+1, sizeof(char));
                 strcpy(curr->no->answers[idx], field);
                 curr->no->num_answers++;
 
