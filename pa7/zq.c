@@ -608,12 +608,11 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
         printf("%s\n", *(file_data+i)); fflush(stdout);
     }
     printf("ZQ_build_tree(): about to call delimit() \n"); fflush(stdout);
-    
 #endif
     char* questions = file_data[1];
     int num_levels = count_char(questions, '?');
     
-    char* qs_list[num_objsnum_objs];
+    char* qs_list[num_objs];
     delimit(questions, ',', qs_list);
     ZQDecisionTree* tree = malloc(sizeof(tree));
 #ifdef db_build
