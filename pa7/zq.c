@@ -633,11 +633,11 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
 	free(*(file_data+ i));
     }
     //free(file_data);
-    
     for (int i = 0; i < num_levels; i++){
         printf("\t%s\n", *(qs_list+ i)); fflush(stdout);//debug
         free(*(qs_list+ i));
     }
+    printf(" build_tree(): about to exit\n"); fflush(stdout);//debug
 #endif
     return tree;
 }
@@ -655,7 +655,8 @@ ZQDecisionTreeNode* ZQ_build_tree_helper(char* questions[],  int curr_lvl, int n
 #ifdef db_build
 	    if (curr_lvl==0){
 		    for (int i = 0; i < num_levels; i++){
-			printf(">%s<\n",questions[i] );fflush(stdout);
+			printf(">%s<\n",questions[i] );
+            fflush(stdout);
 		    }
 	    }
 
@@ -678,7 +679,7 @@ ZQDecisionTreeNode* ZQ_build_tree_helper(char* questions[],  int curr_lvl, int n
 	printf("curr lvl: %d\n", curr_lvl);fflush(stdout);
 	printf(">%s\n<",questions[curr_lvl] );fflush(stdout);
 	printf("[%s]\n", node->text);
-	printf("about to exit ZQ_build_tree_helper()\n");
+	printf("ZQ_build_tree_helper(): about to exit\n");
    	fflush(stdout);
 #endif
 }//end question nodes block
@@ -713,6 +714,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     int num_lvls = count_char(*(file_data+1), '?');
     
 #ifdef  db_preproc
+    printf("\nZQ_populate_tree()\n");
     printf("num_lvls = %d\n", num_lvls);
     fflush(stdout);
     printf("\nZQ_populate_tree()\n");
@@ -742,6 +744,9 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
 #endif
         ZQ_populate_tree_helper(tree->root, objects[i], answers, 0 , num_lvls); //num_lvls+1 for the answer nodes
     }
+#ifdef  db_pop
+    printf("poulate_tree(): about to free stuff\n"); fflush(stdout);//debug
+#endif
  /* ***************************  CLEANUP ******************************************* */
     for (int i = 0; i < num_objs; i++)
         free(*(objects+ i));
@@ -750,6 +755,9 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     for (int i = 0; i < num_lines; i++)
         free(*(file_data+ i));
     //free(file_data);
+#ifdef  db_pop
+    printf("poulate_tree(): about to exit\n"); fflush(stdout);//debug
+#endif
 /*
  This takes a previously-built tree and a char* with the name of the data file.
  The function populates the tree with the answers within the correct leaf nodes based on the data
