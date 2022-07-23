@@ -718,9 +718,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     
 #ifdef  db_preproc
     printf("\nZQ_populate_tree()\n");
-    printf("num_lvls = %d\n", num_lvls);
     fflush(stdout);
-    printf("\nZQ_populate_tree()\n");
     for (int i = 0; i < num_lines; i++){
         printf("%s\n", *(file_data+i));
         fflush(stdout);
@@ -730,9 +728,10 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     process(file_data, ',', num_objs, objects, answers_temp); //populate the answers and objects fields
    
 #ifdef  db_preproc
+    printf("\nZQ_populate_tree(): output of process()\n");
     for (int i = 0; i < num_objs; i++){
-        printf("%d. %s\t", i, objects[i]);
-        printf("%s\n", answers_temp[i]);
+        printf("%d. %s\t", i, objects[i]); fflush(stdout);
+        printf("%s\n", answers_temp[i]); fflush(stdout);
     }
     printf("\n");
 #endif
@@ -860,19 +859,21 @@ void process(char** data, char delim, int num_lines, char* col1[], char* col2[])
     
 #ifdef  db_build
     printf("process()\n");
-    for (int i = 1; i < num_lines+1; i++){
-        printf("%s\n", *(data+i));
+    for (int i = 0; i < num_lines; i++){
+        printf("%s\n", *(data+i+2)); fflush(stdout);
     }
-    printf("\n");
+    printf("\n"); fflush(stdout);
 #endif
     //populate col1, col2
     for (int l = 0; l < num_lines; l++){
-        int col1_elems = len_char(*(data+l+1))-col2_elems;
+        int col1_elems = len_char(*(data+l+2))-col2_elems;
         col1[l] = calloc(col1_elems, sizeof(char));
-        parse_line(*(data+l+1), ',', &(col1[l]), &(col2[l]));
+        parse_line(*(data+l+2), ',', &(col1[l]), &(col2[l]));
 #ifdef  db_build
-        printf("%d. %s\t", l, col1[l]);
-        printf("%s\n", col2[l]);
+        printf("process(): output of parse_line()\n"); fflush(stdout);
+        printf("%d. %s\t", l, col1[l]); fflush(stdout);
+        printf("%s\n", col2[l]); fflush(stdout);
+        printf("process(): exiting...\n"); fflush(stdout);
 #endif
     }
 }
