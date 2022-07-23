@@ -603,7 +603,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
     
 #ifdef  db_build
     printf("\nZQ_build_tree()\n"); fflush(stdout);
-    for (int i = 0; i < num_lines+1; i++){
+    for (int i = 0; i < num_lines; i++){
         printf("%s\n", *(file_data+i)); fflush(stdout);
     }
     printf("ZQ_build_tree(): about to call delimit() \n"); fflush(stdout);
@@ -631,7 +631,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
 #ifdef db_build
     printf("ZQ_build_tree(): about to free file_data and qs_list\n");
     fflush(stdout);
-    for (int i = 0; i < num_lines+1; i++){
+    for (int i = 0; i < num_lines; i++){
     	printf("\t%s\n", *(file_data+ i)); fflush(stdout); //debug
 	free(*(file_data+ i));
     }
@@ -721,7 +721,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     printf("num_lvls = %d\n", num_lvls);
     fflush(stdout);
     printf("\nZQ_populate_tree()\n");
-    for (int i = 0; i < num_lines+1; i++){
+    for (int i = 0; i < num_lines; i++){
         printf("%s\n", *(file_data+i));
         fflush(stdout);
     }
@@ -730,7 +730,7 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
     process(file_data, ',', num_objs, objects, answers_temp); //populate the answers and objects fields
    
 #ifdef  db_preproc
-    for (int i = 0; i < num_lines; i++){
+    for (int i = 0; i < num_objs; i++){
         printf("%d. %s\t", i, objects[i]);
         printf("%s\n", answers_temp[i]);
     }
@@ -738,25 +738,34 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
 #endif
     int answers[num_lvls+1]; reset_int_arr(answers, 0, num_lvls+1, -1); //add a -1 at the end
     
-    for (int i = 0; i < num_lines; i++){
+    for (int i = 0; i < num_objs; i++){
         str2int_list(answers_temp[i], answers);
 #ifdef  db_preproc
-        print_int_arr(answers);
-	printf("about to call pop_tree_helper()\n");
+    print_int_arr(answers);
+	printf("poulate_tree(): about to call pop_tree_helper()\n");
    	 fflush(stdout);
 #endif
         ZQ_populate_tree_helper(tree->root, objects[i], answers, 0 , num_lvls); //num_lvls+1 for the answer nodes
-    }
+    } //end for
 #ifdef  db_pop
     printf("poulate_tree(): about to free stuff\n"); fflush(stdout);//debug
 #endif
  /* ***************************  CLEANUP ******************************************* */
     for (int i = 0; i < num_objs; i++)
         free(*(objects+ i));
+#ifdef  db_pop
+    printf("poulate_tree(): freed objects\n"); fflush(stdout);//debug
+#endif
     for (int i = 0; i < num_objs; i++)
         free(*(answers_temp+ i));
+#ifdef  db_pop
+    printf("poulate_tree(): freed answers_temp\n"); fflush(stdout);//debug
+#endif
     for (int i = 0; i < num_lines; i++)
         free(*(file_data+ i));
+#ifdef  db_pop
+    printf("poulate_tree(): freed file_data\n"); fflush(stdout);//debug
+#endif
     //free(file_data);
 #ifdef  db_pop
     printf("poulate_tree(): about to exit\n"); fflush(stdout);//debug
