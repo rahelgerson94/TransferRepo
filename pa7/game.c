@@ -13,6 +13,7 @@ int main(int argc, const char * argv[]) {
     //char* path = (char*)argv[1];
     strcpy(path, argv[1]);
     ZQDecisionTree* tree = ZQ_build_tree(path);
+    //ZQ_print_tree(tree);
     ZQ_populate_tree(tree, path);
     //ZQ_print_tree(tree);
     play(tree->root);
