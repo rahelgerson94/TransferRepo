@@ -588,17 +588,18 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
  leaf nodes with no questions or answers are added to the tree. Every level of this
  totally-full tree should have the same question.*/
     FILE* data = fopen(file_name, "r");
-    int indices[1]  = {0};
-    int num_lines;
-    char temp_int[10];
-    fgets(temp_int, BUFFSIZE, data);
-    fclose(data);
+    int buff_size = 100;
     
-    num_lines = atoi(temp_int);
-    char* file_data[num_lines+1];
-    data = fopen(file_name, "r");
-    int dummy;
-    read_(data, indices, file_data, &dummy);
+    
+    
+    //int indices[1]  = {0};
+    //data = fopen(file_name, "r");
+    //int dummy;
+    //read_(data, indices, file_data, &dummy);
+    
+    int num_lines = count_num_lines(file_name, buff_size);
+    char* file_data[num_lines];
+    read_( file_name, buff_size, file_data);
     
 #ifdef  db_build
     printf("\nZQ_build_tree()\n");
@@ -607,7 +608,7 @@ ZQDecisionTree* ZQ_build_tree(char* file_name){
     }
     printf("\n");
 #endif
-    char* questions = file_data[0];
+    char* questions = file_data[1];
     int num_levels = count_char(questions, '?');
     
     char* qs_list[num_lines];
@@ -686,20 +687,30 @@ ZQDecisionTreeNode* ZQ_build_tree_helper(char* questions[],  int curr_lvl, int n
 
 
 void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
-    FILE* data = fopen(file_name, "r");
-    int num_lines;
-    char temp_int[10];
-    fgets(temp_int, BUFFSIZE, data);
-    fclose(data);
-    data = fopen(file_name, "r");
-    num_lines = atoi(temp_int);
-    char* file_data[num_lines+1];
     
-    int dummy;
+    int buff_size = 100;
+    int num_lines = count_num_lines(file_name, buff_size);
+    char* file_data[num_lines];
+    read_( file_name, buff_size, file_data);
+    int num_objs = atoi(file_data[0]);
+    /*
+     FILE* data = fopen(file_name, "r");
+     int num_lines;
+     char temp_int[10];
+     fgets(temp_int, BUFFSIZE, data);
+     fclose(data);
+     data = fopen(file_name, "r");
+     num_lines = atoi(temp_int);
+     char* file_data[num_lines+1];
+     
+     int dummy;
+     int indices[1]  = {0};
+     read_(data, indices, file_data, &dummy);
+     
+     */
     
-    int indices[1]  = {0};
-    read_(data, indices, file_data, &dummy);
-    int num_lvls = count_char(*(file_data+0), '?');
+    
+    int num_lvls = count_char(*(file_data+1), '?');
     
 #ifdef  db_preproc
     printf("num_lvls = %d\n", num_lvls);
@@ -710,8 +721,8 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
         fflush(stdout);
     }
 #endif
-    char* objects[num_lines]; char* answers_temp[num_lines];
-    process(file_data, ',', num_lines, objects, answers_temp); //populate the answers and objects fields
+    char* objects[num_objs]; char* answers_temp[num_objs];
+    process(file_data, ',', num_objs, objects, answers_temp); //populate the answers and objects fields
    
 #ifdef  db_preproc
     for (int i = 0; i < num_lines; i++){
@@ -732,11 +743,11 @@ void ZQ_populate_tree(ZQDecisionTree* tree, char* file_name){
         ZQ_populate_tree_helper(tree->root, objects[i], answers, 0 , num_lvls); //num_lvls+1 for the answer nodes
     }
  /* ***************************  CLEANUP ******************************************* */
-    for (int i = 0; i < num_lines; i++)
+    for (int i = 0; i < num_objs; i++)
         free(*(objects+ i));
-    for (int i = 0; i < num_lines; i++)
+    for (int i = 0; i < num_objs; i++)
         free(*(answers_temp+ i));
-    for (int i = 0; i < num_lines+1; i++)
+    for (int i = 0; i < num_lines; i++)
         free(*(file_data+ i));
     //free(file_data);
 /*
@@ -819,7 +830,7 @@ void ZQ_free_tree_helper(ZQDecisionTreeNode* cur, int lvl){
  col1 and col2 are outparams */
 void process(char** data, char delim, int num_lines, char* col1[], char* col2[]){
     //int num_qs = count(*data, "?");
-    int num_qs = count_char(*data, '?');
+    int num_qs = count_char(data[1], '?');
     int col2_elems = (num_qs*2) - 1; //col2 elems are always 1 digit, and look like 0,1,... and we know how many 0's and 1s there are (there are num_qs of them)
     
     /* allocate  space for col2*/
@@ -881,72 +892,134 @@ char* read_line(char* curr_buff, char** prev_buff, char* line, int* num_buffs){
 /* this function stores the info contained in a file in a variable, file_data
  the first line must contain the number of lines in the file
  file_data,then   stores all lines except the first */
-void read_(FILE* data , int indices[], char* file_data[], int* num_lines){
-    /*
-     indices: the lines that are to be treated as special
-     */
-    char* curr_data = calloc(BUFFSIZE+1, sizeof(char));
-    char* prev_data = calloc(BUFFSIZE+1, sizeof(char));
-    char* line = calloc(BUFFSIZE+1, sizeof(char));
-    int l = 0;
-    int data_i=0;
-    int num_buffs=1;
-    while(fgets(curr_data, BUFFSIZE, data) != NULL){
-        data_i = l-1;
-        if (l == indices[0]){ //number of qs
-            *num_lines = atoi(curr_data);
-           // file_data = calloc(1 + *num_lines, sizeof(char*));
-            l++;
-            num_buffs = 1; //rst  num_buffs for next code block;
-            continue;
-        }
-        else{  //the questions
-            if ( data_i < *num_lines ){
-                //if (count(curr_data, "\n" ) <= 0 ){ //if curr_data does not contain a newline char
-                if (count_char(curr_data, '\n' ) <= 0 ){ //if curr_data does not contain a newline char
-                    line = read_line(curr_data, &prev_data, line, &num_buffs);
-                    //questions = read_line(curr_data, &prev_data, questions, &num_buffs);
-                    //read_line(curr_data, &prev_data, &temp, &num_buffs);
-                }
-                else { //the possible objects and their clues
-                    char temp_[BUFFSIZE*num_buffs]; memset(temp_, '\0', BUFFSIZE*num_buffs);
-                    strcpy_(temp_, curr_data, 0, 0, BUFFSIZE*num_buffs);
-                    line = read_line(temp_, &prev_data, line, &num_buffs);
-                    file_data[data_i] = calloc(1+len_char(line), sizeof(char));
-                    strcpy_(file_data[data_i], line, 0, 0, len_char(line));
-
-                    free(line);
-                    free(prev_data);
-                    line = calloc(1+BUFFSIZE, sizeof(char));
-                    prev_data = calloc(1+BUFFSIZE, sizeof(char));
-                    num_buffs = 1;
-                    l++;
-                    continue;
-                }
-            }//end l < num_lines - 1
-            else{
-                line = read_line(curr_data, &prev_data, line, &num_buffs);
-                //*(*file_data+ data_i) = calloc(1+ len_char(line), sizeof(char));
-                //strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
-                file_data[data_i] = calloc(1+ len_char(line), sizeof(char));
-                strcpy_(file_data[data_i], line, 0, 0, len_char(line));
-//    #ifdef debug
-                
-#ifdef db_preproc
-                printf("%s\n", file_data[data_i]);
-#endif
-#ifdef db_pop2
-		printf("\t");  printf("[pop_helper()] data_i = %d\n", data_i);
-#endif
-	    }//end NOT(data_i == num_lines -1)
-            }//end l ≠ 0
-        }//end while
-    /*CLEANUP*/
+//void read_(FILE* data , int indices[], char* file_data[], int* num_lines){
+//    /*
+//     indices: the lines that are to be treated as special
+//     */
+//    char* curr_data = calloc(BUFFSIZE+1, sizeof(char));
+//    char* prev_data = calloc(BUFFSIZE+1, sizeof(char));
+//    char* line = calloc(BUFFSIZE+1, sizeof(char));
+//    int l = 0;
+//    int data_i=0;
+//    int num_buffs=1;
+//    while(fgets(curr_data, BUFFSIZE, data) != NULL){
+//        data_i = l-1;
+//        if (l == indices[0]){ //number of qs
+//            *num_lines = atoi(curr_data);
+//           // file_data = calloc(1 + *num_lines, sizeof(char*));
+//            l++;
+//            num_buffs = 1; //rst  num_buffs for next code block;
+//            continue;
+//        }
+//        else{  //the questions
+//            if ( data_i < *num_lines ){
+//                //if (count(curr_data, "\n" ) <= 0 ){ //if curr_data does not contain a newline char
+//                if (count_char(curr_data, '\n' ) <= 0 ){ //if curr_data does not contain a newline char
+//                    line = read_line(curr_data, &prev_data, line, &num_buffs);
+//                    //questions = read_line(curr_data, &prev_data, questions, &num_buffs);
+//                    //read_line(curr_data, &prev_data, &temp, &num_buffs);
+//                }
+//                else { //the possible objects and their clues
+//                    char temp_[BUFFSIZE*num_buffs]; memset(temp_, '\0', BUFFSIZE*num_buffs);
+//                    strcpy_(temp_, curr_data, 0, 0, BUFFSIZE*num_buffs);
+//                    line = read_line(temp_, &prev_data, line, &num_buffs);
+//                    file_data[data_i] = calloc(1+len_char(line), sizeof(char));
+//                    strcpy_(file_data[data_i], line, 0, 0, len_char(line));
+//
+//                    free(line);
+//                    free(prev_data);
+//                    line = calloc(1+BUFFSIZE, sizeof(char));
+//                    prev_data = calloc(1+BUFFSIZE, sizeof(char));
+//                    num_buffs = 1;
+//                    l++;
+//                    continue;
+//                }
+//            }//end l < num_lines - 1
+//            else{
+//                line = read_line(curr_data, &prev_data, line, &num_buffs);
+//                //*(*file_data+ data_i) = calloc(1+ len_char(line), sizeof(char));
+//                //strcpy_(*(*file_data+ data_i), line, 0, 0, len_char(line));
+//                file_data[data_i] = calloc(1+ len_char(line), sizeof(char));
+//                strcpy_(file_data[data_i], line, 0, 0, len_char(line));
+////    #ifdef debug
+//
+//#ifdef db_preproc
+//                printf("%s\n", file_data[data_i]);
+//#endif
+//#ifdef db_pop2
+//		printf("\t");  printf("[pop_helper()] data_i = %d\n", data_i);
+//#endif
+//	    }//end NOT(data_i == num_lines -1)
+//            }//end l ≠ 0
+//        }//end while
+//    /*CLEANUP*/
+//    fclose(data);
+//    /*freeing data*/
+//    free(curr_data);
+//    free(prev_data);
+//    free(line);
+//}
+/* count the number of lines in a file */
+int count_num_lines(char* path, int buff_size){
+    FILE* data = fopen(path, "r");
+    char curr_data[buff_size];
+    int num_lines = 0;
+    while(fgets(curr_data, buff_size, data) != NULL){
+        num_lines+=count_char(curr_data, '\n');
+    }
     fclose(data);
-    /*freeing data*/
-    free(curr_data);
-    free(prev_data);
-    free(line);
+    return num_lines+1;
+}
+int get_max_line_len(char* path){
+    /* returns the length of the longest line in a file
+     length excludes newline char */
+    FILE* data = fopen(path, "r");
+    char curr_data[2];
+    int num_lines = 0;
+    int max_num_char = 0;
+    int curr_num_char = 0;
+//    printf("<\n");
+    while(fgets(curr_data, 2, data) != NULL){
+//        printf(">%s<\n",curr_data);
+        if (strcmp(curr_data,"\n") == 0 || strcmp(curr_data,"\0") == 0){
+            num_lines++;
+            if (curr_num_char > max_num_char) max_num_char = curr_num_char;
+            curr_num_char = 0;
+        }else{
+            curr_num_char++;
+        }
+    }
+    fclose(data);
+//    printf(">");
+    return max_num_char;
 }
 
-
+void read_(char* path, int buff_size, char* arr[]){
+    /* populate arr w/ contents of file_data.
+     arr is an out param */
+    
+    //int num_lines = count_num_lines(path, buff_size);
+    int max_len = get_max_line_len(path);
+    int cur_len;
+    FILE* in = fopen(path, "r");
+    char curr_in[max_len+1];
+    reset_char_arr(curr_in, 0, max_len);
+    int i = 0;
+    while(fgets(curr_in, max_len+1, in)){ //+1 for new line
+        cur_len = len_char(curr_in);
+        curr_in[cur_len] = '\0';
+        //printf("%d\t", cur_len);
+        if (cur_len == 0)
+            continue;
+        else{
+            arr[i] = malloc(sizeof(char)*(cur_len+1)); //+1 for null char,
+            strcpy(arr[i], curr_in);
+            arr[i][cur_len]  = '\0';
+            //printf(">%s<\n", arr[i]);
+            reset_char_arr(curr_in, 0, max_len);
+            i++;
+        }
+        
+    }
+    fclose(in);
+}

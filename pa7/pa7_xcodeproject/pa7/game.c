@@ -14,6 +14,7 @@ int main(int argc, const char * argv[]) {
     ZQDecisionTree* tree = ZQ_build_tree(path);
    
     ZQ_populate_tree(tree, path);
+    ZQ_print_tree(tree);
     ZQ_free_tree(tree);
     free(path);
     return 0;
